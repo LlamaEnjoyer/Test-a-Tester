@@ -1,0 +1,708 @@
+[
+  {
+    "question": "Given the following Python code, what will be printed if the element with the ID 'submit-btn' is found and enabled on the page?",
+    "code_snippet": "from selenium.webdriver.common.by import By\n\ntry:\n    button = driver.find_element(By.ID, 'submit-btn')\n    if button.is_enabled():\n        print('Button is ready')\n    else:\n        print('Button is not interactable')\nexcept:\n    print('Button not found')",
+    "options": [
+      "Button is ready",
+      "Button is not interactable",
+      "Button not found",
+      "The code will raise an exception"
+    ],
+    "correct_answer_index": 0,
+    "category": "Selenium",
+    "explanation": "The correct answer is 'Button is ready' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "Which line of Python code correctly initializes a WebDriverWait instance with a 10-second timeout?",
+    "options": [
+      "wait = WebDriverWait(10, driver)",
+      "wait = WebDriverWait(driver, 10)",
+      "wait = driver.wait(10)",
+      "wait = WebDriverWait.create(driver, 10)"
+    ],
+    "correct_answer_index": 1,
+    "category": "Selenium",
+    "explanation": "WebDriverWait(driver, 10) correctly initializes an explicit wait with a 10-second timeout, where driver is passed first."
+  },
+  {
+    "question": "In Selenium, what is the primary purpose of the `By` class?",
+    "options": [
+      "To perform browser actions like click() and send_keys()",
+      "To manage browser windows and tabs",
+      "To provide mechanisms for locating elements on a page (e.g., by ID, Name, XPath)",
+      "To store test data"
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "The correct answer is 'To provide mechanisms for locating elements on a page (e.g., by ID, Name, XPath)' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "What is the primary benefit of using the Page Object Model (POM) in test automation?",
+    "options": [
+      "To make test execution significantly faster",
+      "To separate test case logic from UI interaction logic, making tests more maintainable and less brittle to UI changes",
+      "To automatically generate test data for the application",
+      "To replace the need for a testing framework like JUnit or TestNG"
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "POM separates test logic from UI structure, making maintenance easier when the UI changes."
+  },
+  {
+    "question": "In the context of testing frameworks like pytest, what is the primary role of a fixture?",
+    "options": [
+      "To store and parameterize test data, allowing a single test to run with multiple inputs",
+      "To perform the assertions or checks that determine if a test passes or fails",
+      "To provide a fixed baseline for tests, managing setup and teardown logic",
+      "To generate detailed reports and logs of test execution"
+    ],
+    "correct_answer_index": 2,
+    "category": "Automation",
+    "explanation": "Fixtures in pytest handle setup and teardown logic, providing a consistent baseline for tests."
+  },
+  {
+    "question": "In Selenium, which locator strategy is best suited to handle elements with dynamic IDs?",
+    "options": [
+      "By.ID",
+      "By.CLASS_NAME",
+      "XPath or CSS Selector",
+      "By.NAME"
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "The By class provides mechanisms to locate web elements, like ID, name, or XPath."
+  },
+  {
+    "question": "What's the best approach for managing test configuration?",
+    "options": [
+      "Hardcoding values directly in test scripts",
+      "Storing configuration in a dedicated test database",
+      "Using environment variables",
+      "Using external configuration files that can be overridden by environment variables"
+    ],
+    "correct_answer_index": 3,
+    "category": "Automation",
+    "explanation": "The correct answer is 'Using external configuration files that can be overridden by environment variables' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "What's the best way to handle dynamic table content?",
+    "options": [
+      "Using absolute XPath to navigate the table structure",
+      "Relying on fixed row and column indexes",
+      "Locating table rows based on unique text in a specific column",
+      "Getting all rows and iterating with a loop"
+    ],
+    "correct_answer_index": 2,
+    "category": "Automation",
+    "explanation": "The correct answer is 'Locating table rows based on unique text in a specific column' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "What's the output of `print(1 + \"2\" - 1)` in Python?",
+    "options": [
+      "2",
+      "\"12-1\"",
+      "0",
+      "A TypeError will be raised"
+    ],
+    "correct_answer_index": 3,
+    "category": "Python",
+    "explanation": "Mixing integers and strings in arithmetic operations raises a TypeError in Python."
+  },
+  {
+    "question": "Which of the following completes the code `current_url = driver.______` to get the current URL of the page in Selenium?",
+    "options": [
+      "get_current_url()",
+      "current_url",
+      "url",
+      "page_source"
+    ],
+    "correct_answer_index": 1,
+    "category": "Selenium",
+    "explanation": "driver.current_url retrieves the current page’s URL as a string."
+  },
+  {
+    "question": "In Python's unittest framework, what method is used to assert that two values are equal?",
+    "options": [
+      "assert_equals(a, b)",
+      "assertTrue(a == b)",
+      "assertEqual(a, b)",
+      "assert(a == b)"
+    ],
+    "correct_answer_index": 2,
+    "category": "Python",
+    "explanation": "assertEqual(a, b) is the standard unittest method to compare expected and actual values."
+  },
+  {
+    "question": "What's the output of `print(5 == \"5\")` in Python?",
+    "options": [
+      "True",
+      "False",
+      "A TypeError will be raised",
+      "A SyntaxError will be raised"
+    ],
+    "correct_answer_index": 1,
+    "category": "Python",
+    "explanation": "The correct answer is 'False' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "What is the correct method to launch a browser in Selenium using Python?",
+    "options": [
+      "start_browser()",
+      "get()",
+      "launch()",
+      "open()"
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "The correct answer is 'launch()' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "What is the best and most idiomatic way of handling exceptions in Python?",
+    "options": [
+      "Using if-else conditional blocks",
+      "try-catch blocks",
+      "Using specific try-except blocks",
+      "Ignoring exceptions to prevent crashes"
+    ],
+    "correct_answer_index": 2,
+    "category": "Python",
+    "explanation": "The correct answer is 'Using specific try-except blocks' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "In general, what is the best practice for handling unexpected errors (e.g., an element not found) during the execution of an automated functional test?",
+    "options": [
+      "The error should be logged, and the test should continue to execute subsequent steps.",
+      "The script should use a try-except block to catch and ignore the error, allowing the test to pass.",
+      "The test should fail immediately at the point of the error, clearly reporting the cause.",
+      "The test should pause and wait for manual intervention to fix the issue before continuing."
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "The correct answer is 'The test should fail immediately at the point of the error, clearly reporting the cause.' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "What is the most reliable method to specifically wait for an element to become visible on a web page before interacting with it?",
+    "options": [
+      "Using driver.implicitly_wait(10) at the start of the test.",
+      "Using WebDriverWait with ExpectedConditions.presence_of_element_located()",
+      "Using WebDriverWait with ExpectedConditions.visibility_of_element_located()",
+      "Using a static time.sleep(5) before the element interaction."
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "The correct answer is 'Using WebDriverWait with ExpectedConditions.visibility_of_element_located()' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "Given the following Python code, what will be printed to the console?",
+    "code_snippet": "my_set = {1, 2, 3}\nmy_set.add(3)\nmy_set.add(4)\nprint(len(my_set))",
+    "options": [
+      "3",
+      "4",
+      "5",
+      "The code will raise an exception"
+    ],
+    "correct_answer_index": 1,
+    "category": "Python",
+    "explanation": "The correct answer is '4' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "In Selenium, how can you execute a piece of JavaScript code within the context of the current page?",
+    "options": [
+      "driver.run_javascript('alert(\"hello\")')",
+      "driver.execute_script('alert(\"hello\")')",
+      "driver.javascript('alert(\"hello\")')",
+      "driver.inject_script('alert(\"hello\")')"
+    ],
+    "correct_answer_index": 1,
+    "category": "Selenium",
+    "explanation": "The correct answer is 'driver.execute_script('alert(\"hello\")')' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "In the context of test automation, what is the main purpose of a 'smoke test' suite?",
+    "options": [
+      "To perform in-depth testing of a specific feature.",
+      "To verify that the most critical functionalities of the application are working after a new build, before more extensive testing is done.",
+      "To test the application under heavy load to identify performance bottlenecks.",
+      "To run all regression tests to ensure new changes haven't broken existing functionality."
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "The correct answer is 'To verify that the most critical functionalities of the application are working after a new build, before more extensive testing is done.' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "What is the correct way to switch to an iframe with the name 'my_frame' in Selenium?",
+    "code_snippet": "from selenium.webdriver.remote.webdriver import WebDriver\n\ndriver: WebDriver\n# Assume driver is initialized\n# How to switch to the iframe?",
+    "options": [
+      "driver.switch_to(frame='my_frame')",
+      "driver.switch_to_iframe('my_frame')",
+      "driver.switch_to.frame('my_frame')",
+      "driver.select_frame('my_frame')"
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "Use driver.switch_to.frame('my_frame') to target a specific frame by name or ID."
+  },
+  {
+    "question": "Which of the following correctly uses an f-string in Python for string formatting?",
+    "options": [
+      "name = 'World'\nprint('Hello, {name}')",
+      "name = 'World'\nprint(f'Hello, {name}')",
+      "name = 'World'\nprint('Hello, %s' % name)",
+      "name = 'World'\nprint('Hello, {}'.format(name))"
+    ],
+    "correct_answer_index": 1,
+    "category": "Python",
+    "explanation": "The correct answer is 'name = 'World'\nprint(f'Hello, {name}')' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "In test automation, what is a 'flaky' test?",
+    "options": [
+      "A test that is designed to always fail to check the reporting system.",
+      "A test that passes and fails intermittently without any changes to the code or the test environment.",
+      "A test that takes a very long time to execute.",
+      "A test that covers a non-critical feature of the application."
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "A flaky test passes or fails inconsistently without code changes, often due to timing or environment."
+  },
+  {
+    "question": "How do you perform a right-click action on an element using Selenium's ActionChains?",
+    "code_snippet": "from selenium.webdriver.common.action_chains import ActionChains\n\n# Assume 'driver' and 'element' are defined\n\n# How to perform a right-click?",
+    "options": [
+      "ActionChains(driver).right_click(element).perform()",
+      "ActionChains(driver).context_click(element).perform()",
+      "ActionChains(driver).click(element, 'right').perform()",
+      "element.right_click()"
+    ],
+    "correct_answer_index": 1,
+    "category": "Selenium",
+    "explanation": "ActionChains(driver).context_click(element).perform() performs a right-click on the element."
+  },
+  {
+    "question": "What is the primary difference between a Python list and a tuple?",
+    "options": [
+      "Lists can store items of different data types, while tuples can only store items of the same type.",
+      "Lists are mutable (changeable), while tuples are immutable (unchangeable).",
+      "Lists use square brackets `[]`, while tuples use curly braces `{}`.",
+      "Lists are ordered and indexed, while tuples are unordered."
+    ],
+    "correct_answer_index": 1,
+    "category": "Python",
+    "explanation": "The correct answer is 'Lists are mutable (changeable), while tuples are immutable (unchangeable).' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "What is the purpose of the `finally` block in a Python `try...except` statement?",
+    "options": [
+      "It contains the code that will be executed only if an exception occurs.",
+      "It is where you define the custom exception to be raised.",
+      "It contains the code that will be executed only if no exception occurs.",
+      "It contains the code that will be executed regardless of whether an exception occurred or not."
+    ],
+    "correct_answer_index": 3,
+    "category": "Python",
+    "explanation": "The correct answer is 'It contains the code that will be executed regardless of whether an exception occurred or not.' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "Which of the following is NOT a valid Selenium locator strategy in the `By` class?",
+    "options": [
+      "By.XPATH",
+      "By.CSS_SELECTOR",
+      "By.TAG_NAME",
+      "By.JQUERY_SELECTOR"
+    ],
+    "correct_answer_index": 3,
+    "category": "Selenium",
+    "explanation": "The By class provides mechanisms to locate web elements, like ID, name, or XPath."
+  },
+  {
+    "question": "In a Behavior-Driven Development (BDD) framework using Gherkin, what is the purpose of the 'Given', 'When', 'Then' keywords?",
+    "options": [
+      "To define Python functions for the test.",
+      "To structure the test in a human-readable format describing a feature's behavior from a user's perspective.",
+      "To import necessary libraries and modules for the test.",
+      "To set the priority and order of test execution."
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "The correct answer is 'To structure the test in a human-readable format describing a feature's behavior from a user's perspective.' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "What will be the output of the following Python list comprehension?",
+    "code_snippet": "squares = [x * x for x in range(5)]\nprint(squares)",
+    "options": [
+      "[1, 4, 9, 16, 25]",
+      "[0, 1, 4, 9, 16]",
+      "[0, 1, 2, 3, 4]",
+      "The code will raise a syntax error."
+    ],
+    "correct_answer_index": 1,
+    "category": "Python",
+    "explanation": "List comprehensions provide a compact way to generate lists; range(5) gives 0–4, so squares are [0, 1, 4, 9, 16]."
+  },
+  {
+    "question": "What is the key difference between `driver.find_element()` and `driver.find_elements()` in Selenium?",
+    "options": [
+      "`find_element()` returns the first matching element or raises an exception if not found, while `find_elements()` returns a list of all matching elements or an empty list if none are found.",
+      "`find_element()` is used for single elements and `find_elements()` is for multiple, but both raise an exception if no elements are found.",
+      "`find_element()` returns a single WebElement, while `find_elements()` returns a generator object.",
+      "There is no functional difference; `find_elements()` is just an alias for `find_element()`."
+    ],
+    "correct_answer_index": 0,
+    "category": "Selenium",
+    "explanation": "The correct answer is '`find_element()` returns the first matching element or raises an exception if not found, while `find_elements()` returns a list of all matching elements or an empty list if none are found.' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "In Python, what is the primary difference between accessing a dictionary value with `my_dict['key']` versus `my_dict.get('key')`?",
+    "options": [
+      "They are identical; `.get()` is just a more verbose way of doing the same thing.",
+      "`my_dict['key']` is faster, but `my_dict.get('key')` can provide a default value if the key is not found.",
+      "`my_dict['key']` will raise a `KeyError` if the key does not exist, whereas `my_dict.get('key')` will return `None` by default.",
+      "`my_dict['key']` can only be used for string keys, while `.get()` works with any hashable type."
+    ],
+    "correct_answer_index": 2,
+    "category": "Python",
+    "explanation": "The correct answer is '`my_dict['key']` will raise a `KeyError` if the key does not exist, whereas `my_dict.get('key')` will return `None` by default.' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "What is the purpose of a Python virtual environment?",
+    "options": [
+      "To run Python scripts with elevated administrator privileges securely.",
+      "To create a simulated operating system for testing cross-platform compatibility.",
+      "To create an isolated environment with its own set of packages and dependencies, separate from the system-wide Python installation.",
+      "To improve the performance of Python scripts by pre-compiling them to machine code."
+    ],
+    "correct_answer_index": 2,
+    "category": "Python",
+    "explanation": "Virtual environments isolate Python dependencies from the system installation for cleaner management."
+  },
+  {
+    "question": "What is the most common cause of a `StaleElementReferenceException` in Selenium?",
+    "options": [
+      "The browser window has been resized, invalidating element coordinates.",
+      "The element was located, but the DOM was updated (e.g., via AJAX or page navigation) before the script could interact with it.",
+      "The wrong locator strategy was used, so the element was never correctly identified.",
+      "The browser's cache was cleared during the test run."
+    ],
+    "correct_answer_index": 1,
+    "category": "Selenium",
+    "explanation": "A StaleElementReferenceException occurs when the DOM updates after locating the element."
+  },
+  {
+    "question": "What is regression testing in the context of software quality assurance?",
+    "options": [
+      "Testing a new feature to ensure it meets all specified requirements.",
+      "The process of re-running existing tests to ensure that recent code changes have not introduced new bugs or broken existing functionality.",
+      "A type of performance testing to see how the application degrades under heavy load.",
+      "Manual testing performed by end-users to find usability issues."
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "Regression testing re-runs existing tests to confirm that new changes didn’t break old functionality."
+  },
+  {
+    "question": "In pytest, what is the primary purpose of the `@pytest.mark.parametrize` decorator?",
+    "options": [
+      "To mark a test as belonging to a specific group or category.",
+      "To run the same test function multiple times with different sets of arguments.",
+      "To skip a test if a certain condition is not met.",
+      "To specify a dependency, ensuring one test runs before another."
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "The correct answer is 'To run the same test function multiple times with different sets of arguments.' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "Given the following Python code, what is the output of `my_function(1, 2, c=3, d=4)`?",
+    "code_snippet": "def my_function(a, b, *args, **kwargs):\n    print(f\"a={a}, b={b}, args={args}, kwargs={kwargs}\")",
+    "options": [
+      "a=1, b=2, args=(), kwargs={'c': 3, 'd': 4}",
+      "a=1, b=2, args=(3, 4), kwargs={}",
+      "The code will raise a TypeError because of unexpected keyword arguments.",
+      "a=1, b=2, c=3, d=4, args=(), kwargs={}"
+    ],
+    "correct_answer_index": 0,
+    "category": "Python",
+    "explanation": "The correct answer is 'a=1, b=2, args=(), kwargs={'c': 3, 'd': 4}' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "Which Selenium method is generally preferred for clearing text from an input field before typing new text?",
+    "options": [
+      "Sending the backspace key repeatedly with `send_keys()`.",
+      "Executing a JavaScript command to set the element's value to an empty string.",
+      "Using the `.clear()` method on the web element.",
+      "Using `send_keys(\"\")` to send an empty string."
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "The clear() method empties an input field before sending new text, ensuring clean entry."
+  },
+  {
+    "question": "What is a Python lambda function?",
+    "options": [
+      "A standard function defined with the `def` keyword that is stored in a special, faster memory location.",
+      "A small, anonymous, single-expression function defined with the `lambda` keyword.",
+      "A function that can only be used within a class definition.",
+      "A built-in function for running code in parallel."
+    ],
+    "correct_answer_index": 1,
+    "category": "Python",
+    "explanation": "A lambda defines an anonymous single-expression function; here, it filters even numbers."
+  },
+  {
+    "question": "How can you take a screenshot of the current browser window in Selenium?",
+    "options": [
+      "driver.get_screenshot()",
+      "driver.save_screenshot('my_screenshot.png')",
+      "driver.take_screenshot(file='my_screenshot.png')",
+      "driver.capture_screen('my_screenshot.png')"
+    ],
+    "correct_answer_index": 1,
+    "category": "Selenium",
+    "explanation": "The correct answer is 'driver.save_screenshot('my_screenshot.png')' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "In test automation, what does the principle of 'Data-Driven Testing' refer to?",
+    "options": [
+      "Testing how the application handles large volumes of data.",
+      "A method where test data is stored in a database and queried during test execution.",
+      "An approach where test logic is separated from the test data, allowing the same test script to be executed with multiple data sets, often read from an external source (like a spreadsheet or CSV file).",
+      "Automatically generating random data to use as input for tests."
+    ],
+    "correct_answer_index": 2,
+    "category": "Automation",
+    "explanation": "Data-driven testing separates test logic from input data, running the same test with multiple datasets."
+  },
+  {
+    "question": "What will be printed to the console by the following Python code?",
+    "code_snippet": "data = [1, 2, 3, 4, 5]\nresult = list(filter(lambda x: x % 2 == 0, data))\nprint(result)",
+    "options": [
+      "[1, 3, 5]",
+      "[2, 4]",
+      "The code will raise a TypeError.",
+      "[False, True, False, True, False]"
+    ],
+    "correct_answer_index": 1,
+    "category": "Python",
+    "explanation": "The correct answer is '[2, 4]' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "Which code snippet correctly performs a 'drag and drop' action in Selenium?",
+    "options": [
+      "ActionChains(driver).click(source).release(target).perform()",
+      "ActionChains(driver).drag(source, target).perform()",
+      "ActionChains(driver).drag_and_drop(source, target).perform()",
+      "ActionChains(driver).move_to_element(source).click_and_hold().move_to_element(target).release().perform()"
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "The correct answer is 'ActionChains(driver).drag_and_drop(source, target).perform()' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "What is the output of the following Python code?",
+    "code_snippet": "my_list = ['a', 'b', 'c', 'd', 'e']\nremoved_item = my_list.pop(2)\nprint(removed_item, my_list)",
+    "options": [
+      "b ['a', 'c', 'd', 'e']",
+      "c ['a', 'b', 'd', 'e']",
+      "d ['a', 'b', 'c', 'e']",
+      "None ['a', 'b', 'd', 'e']"
+    ],
+    "correct_answer_index": 1,
+    "category": "Python",
+    "explanation": "The correct answer is 'c ['a', 'b', 'd', 'e']' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "Complete the following Selenium code to wait until an element is clickable.",
+    "code_snippet": "from selenium.webdriver.support.ui import WebDriverWait\nfrom selenium.webdriver.support import expected_conditions as EC\nfrom selenium.webdriver.common.by import By\n\nwait = WebDriverWait(driver, 10)\nelement = wait.until(EC.______( (By.ID, 'submit-btn') ))",
+    "options": [
+      "visibility_of_element_located",
+      "presence_of_element_located",
+      "element_to_be_clickable",
+      "element_to_be_selected"
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "The correct answer is 'element_to_be_clickable' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "Which line of code is required to make a hidden menu visible by hovering the mouse over its parent element?",
+    "code_snippet": "from selenium.webdriver.common.action_chains import ActionChains\n\nmenu_trigger = driver.find_element(By.ID, 'menu-trigger')\n# Missing code here to make the menu appear\n",
+    "options": [
+      "ActionChains(driver).hover(menu_trigger).perform()",
+      "ActionChains(driver).move_to_element(menu_trigger).perform()",
+      "driver.execute_script('arguments[0].hover();', menu_trigger)",
+      "menu_trigger.hover()"
+    ],
+    "correct_answer_index": 1,
+    "category": "Selenium",
+    "explanation": "The correct answer is 'ActionChains(driver).move_to_element(menu_trigger).perform()' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "What will be printed after running this Python code?",
+    "code_snippet": "numbers = [1, 2, 3, 4, 5]\nnew_list = [n * 2 for n in numbers if n % 2 != 0]\nprint(new_list)",
+    "options": [
+      "[2, 4, 6, 8, 10]",
+      "[1, 3, 5]",
+      "[4, 10]",
+      "[2, 6, 10]"
+    ],
+    "correct_answer_index": 3,
+    "category": "Python",
+    "explanation": "The correct answer is '[2, 6, 10]' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "Fill in the blank to complete the code that checks if a checkbox is selected.",
+    "code_snippet": "checkbox = driver.find_element(By.ID, 'terms-and-conditions')\nif checkbox.______:\n    print('Checkbox is already selected.')",
+    "options": [
+      "is_selected()",
+      "is_checked()",
+      "get_attribute('selected')",
+      "is_enabled()"
+    ],
+    "correct_answer_index": 0,
+    "category": "Automation",
+    "explanation": "The correct answer is 'is_selected()' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "How do you correctly use ActionChains to press the SHIFT key, type 'hello', and then release the SHIFT key?",
+    "options": [
+      "ActionChains(driver).press(Keys.SHIFT).send_keys('hello').release(Keys.SHIFT).perform()",
+      "ActionChains(driver).key_down(Keys.SHIFT).send_keys('hello').key_up(Keys.SHIFT).perform()",
+      "ActionChains(driver).send_keys(Keys.SHIFT, 'hello').perform()",
+      "ActionChains(driver).send_keys_with_modifier(Keys.SHIFT, 'hello').perform()"
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "The correct answer is 'ActionChains(driver).key_down(Keys.SHIFT).send_keys('hello').key_up(Keys.SHIFT).perform()' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "What is the output of this Python code snippet that uses list slicing?",
+    "code_snippet": "letters = ['a', 'b', 'c', 'd', 'e', 'f']\nprint(letters[1:4])",
+    "options": [
+      "['a', 'b', 'c', 'd']",
+      "['b', 'c', 'd']",
+      "['b', 'c', 'd', 'e']",
+      "['a', 'b', 'c']"
+    ],
+    "correct_answer_index": 1,
+    "category": "Python",
+    "explanation": "The correct answer is '['b', 'c', 'd']' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "Complete the Python code to get the text content of a web element.",
+    "code_snippet": "page_heading = driver.find_element(By.TAG_NAME, 'h1')\nheading_text = page_heading.______",
+    "options": [
+      "get_text()",
+      "text()",
+      "text",
+      "inner_html"
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "The correct answer is 'text' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "Which action is NOT typically performed using the ActionChains class in Selenium?",
+    "options": [
+      "Double-clicking an element.",
+      "Navigating to a new URL.",
+      "Right-clicking an element.",
+      "Dragging and dropping an element."
+    ],
+    "correct_answer_index": 1,
+    "category": "Selenium",
+    "explanation": "The correct answer is 'Navigating to a new URL.' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "What is the result of the following Python code?",
+    "code_snippet": "list_a = [1, 2, 3]\nlist_b = list_a\nlist_b.append(4)\nprint(list_a)",
+    "options": [
+      "[1, 2, 3]",
+      "[1, 2, 3, 4]",
+      "The code will raise an error because you cannot assign a list to another.",
+      "[4]"
+    ],
+    "correct_answer_index": 1,
+    "category": "Python",
+    "explanation": "The correct answer is '[1, 2, 3, 4]' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "Fill in the blank to navigate the browser to a specific URL.",
+    "code_snippet": "from selenium import webdriver\n\ndriver = webdriver.Chrome()\ndriver.______('https://www.google.com')",
+    "options": [
+      "open",
+      "navigate",
+      "get",
+      "load_page"
+    ],
+    "correct_answer_index": 2,
+    "category": "Automation",
+    "explanation": "The correct answer is 'get' because it reflects the correct or most idiomatic usage for this concept."
+  },
+  {
+    "question": "Which pytest hook is executed before each test function runs?",
+    "options": [
+      "pytest_sessionstart",
+      "pytest_runtest_setup",
+      "pytest_runtest_teardown",
+      "pytest_fixture_setup"
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "pytest_runtest_setup is called before each test function executes, allowing setup actions to be performed.",
+    "new": true
+  },
+  {
+    "question": "In automation testing, when should you prefer logging over assertions?",
+    "options": [
+      "When verifying critical functionality that must pass.",
+      "When you need to record runtime information without stopping the test.",
+      "When you want the test to fail immediately on unexpected behavior.",
+      "When you are testing exception handling code."
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "Logging provides runtime information and context for debugging, while assertions validate conditions and fail tests if unmet.",
+    "new": true
+  },
+  {
+    "question": "How can you run a Chrome browser in headless mode using Selenium 4?",
+    "code_snippet": "from selenium import webdriver\nfrom selenium.webdriver.chrome.options import Options\n\noptions = Options()\n# Missing line here\n",
+    "options": [
+      "options.headless = True",
+      "options.set_headless(True)",
+      "options.add_argument('--headless')",
+      "options.run_in_background(True)"
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "options.add_argument('--headless') enables Chrome to run without a GUI, ideal for CI/CD environments.",
+    "new": true
+  },
+  {
+    "question": "What is the key difference between explicit and fluent waits in Selenium?",
+    "options": [
+      "Fluent waits can ignore specific exceptions and poll at intervals, while explicit waits wait for a condition up to a maximum time.",
+      "Explicit waits are faster but less flexible than fluent waits.",
+      "Fluent waits are deprecated in Selenium 4.",
+      "There is no difference; both behave identically."
+    ],
+    "correct_answer_index": 0,
+    "category": "Selenium",
+    "explanation": "FluentWait allows custom polling frequency and ignored exceptions, providing more control than standard explicit waits.",
+    "new": true
+  },
+  {
+    "question": "Which Python library is commonly used for simple REST API test automation?",
+    "options": [
+      "http.client",
+      "urllib",
+      "requests",
+      "json"
+    ],
+    "correct_answer_index": 2,
+    "category": "Automation",
+    "explanation": "The requests library simplifies sending HTTP requests and validating API responses in test automation.",
+    "new": true
+  }
+]

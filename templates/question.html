@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Quiz</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <style>
+        body { font-family: sans-serif; max-width: 900px; margin: 50px auto; background-color: #f4f4f9; color: #333; transition: background-color 0.3s, color 0.3s; }
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #5a67d8;
+            color: white;
+            border: none;
+            padding: 0;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.2em;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: background-color 0.3s, transform 0.2s;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-toggle:hover {
+            background-color: #434190;
+            transform: scale(1.1);
+        }
+        body.dark-mode .theme-toggle {
+            background-color: #fbbf24;
+            color: #1a1a1a;
+        }
+        body.dark-mode .theme-toggle:hover {
+            background-color: #f59e0b;
+        }
+        .quiz-container { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: relative; padding-bottom: 80px; min-height: 550px; transition: background-color 0.3s, box-shadow 0.3s; }
+        body.dark-mode .quiz-container {
+            background-color: #2d2d2d;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        h1 { color: #5a67d8; font-size: 1.2em; margin-top: 30px; }
+        body.dark-mode h1 {
+            color: #818cf8;
+        }
+        .question-header { font-size: 1.1em; font-weight: bold; margin-bottom: 20px; }
+        body.dark-mode .question-header {
+            color: #e0e0e0;
+        }
+        .timer { 
+            position: absolute; 
+            top: 20px; 
+            right: 80px;
+            background-color: #f0f0f0; 
+            padding: 15px 20px; 
+            border-radius: 8px; 
+            font-size: 1.2em; 
+            font-weight: bold; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode .timer {
+            background-color: #374151;
+            color: #e0e0e0;
+        }
+        .timer.warning { background-color: #ffd700; color: #333; }
+        body.dark-mode .timer.warning {
+            background-color: #fbbf24;
+            color: #1a1a1a;
+        }
+        .timer.danger { background-color: #ff4444; color: white; }
+        body.dark-mode .timer.danger {
+            background-color: #dc2626;
+            color: white;
+        }
+        .code-snippet { background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; margin-bottom: 20px; white-space: pre-wrap; font-family: monospace;}
+        body.dark-mode .code-snippet {
+            background-color: #1a1a1a;
+            border: 1px solid #4b5563;
+        }
+        ul { list-style-type: none; padding: 0; }
+        li { margin-bottom: 15px; }
+        label { display: block; padding: 10px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; }
+        body.dark-mode label {
+            border-color: #4b5563;
+            color: #e0e0e0;
+        }
+        label:hover { background-color: #eef2ff; }
+        body.dark-mode label:hover {
+            background-color: #374151;
+        }
+        input[type="radio"] { margin-right: 10px; }
+        button[type="submit"] { background-color: #5a67d8; color: white; border: none; padding: 12px 20px; border-radius: 5px; font-size: 1em; cursor: pointer; width: 200px; position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); transition: background-color 0.3s; }
+        button[type="submit"]:hover { background-color: #434190; }
+        body.dark-mode button[type="submit"] {
+            background-color: #818cf8;
+        }
+        body.dark-mode button[type="submit"]:hover {
+            background-color: #6366f1;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+        <span id="theme-icon">🌙</span>
+    </button>
+    <div class="quiz-container">
+        <div class="timer" id="timer">
+            <span id="time-display">--:--</span>
+        </div>
+        <div class="question-header">
+            Question {{ question_number }} of {{ total_questions }}
+        </div>
+        
+        <h1>{{ question_data.question }}</h1>
+        
+        {% if question_data.code_snippet %}
+            <pre class="code-snippet"><code>{{ question_data.code_snippet }}</code></pre>
+        {% endif %}
+
+        <form method="post" id="quiz-form">
+            <ul>
+                {% for option in question_data.options %}
+                <li>
+                    <label>
+                        <input type="radio" name="option" value="{{ loop.index0 }}" required>
+                        {{ option }}
+                    </label>
+                </li>
+                {% endfor %}
+            </ul>
+            <button type="submit">Submit Answer</button>
+        </form>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const body = document.body;
+
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeIcon.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Initialize remaining time from server (in seconds)
+        let remainingTime = {{ remaining_time }};
+        const timerElement = document.getElementById('timer');
+        const timeDisplay = document.getElementById('time-display');
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${minutes}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimer() {
+            if (remainingTime <= 0) {
+                // Time's up - redirect to score page
+                window.location.href = "{{ url_for('show_score') }}";
+                return;
+            }
+
+            timeDisplay.textContent = formatTime(remainingTime);
+            
+            // Update timer styling based on remaining time
+            if (remainingTime <= 60) {
+                timerElement.className = 'timer danger';
+            } else if (remainingTime <= 180) {
+                timerElement.className = 'timer warning';
+            } else {
+                timerElement.className = 'timer';
+            }
+
+            remainingTime--;
+        }
+
+        // Update timer immediately, then every second
+        updateTimer();
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        // Clear interval when form is submitted
+        document.getElementById('quiz-form').addEventListener('submit', function() {
+            clearInterval(timerInterval);
+        });
+    </script>
+</body>
+</html>
