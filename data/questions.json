@@ -10,7 +10,7 @@
     ],
     "correct_answer_index": 0,
     "category": "Selenium",
-    "explanation": "The correct answer is 'Button is ready' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "When the element is found and enabled, the condition button.is_enabled() evaluates to True, executing the print statement 'Button is ready'. The code only prints the other messages if the element is disabled or not found."
   },
   {
     "question": "Which line of Python code correctly initializes a WebDriverWait instance with a 10-second timeout?",
@@ -34,7 +34,7 @@
     ],
     "correct_answer_index": 2,
     "category": "Selenium",
-    "explanation": "The correct answer is 'To provide mechanisms for locating elements on a page (e.g., by ID, Name, XPath)' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "The By class defines locator strategies (By.ID, By.NAME, By.XPATH, By.CSS_SELECTOR, etc.) that tell Selenium how to find elements in the DOM. It doesn't perform actions, manage windows, or store data."
   },
   {
     "question": "What is the primary benefit of using the Page Object Model (POM) in test automation?",
@@ -82,7 +82,7 @@
     ],
     "correct_answer_index": 3,
     "category": "Automation",
-    "explanation": "The correct answer is 'Using external configuration files that can be overridden by environment variables' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "Using external configuration files (JSON, YAML, INI) provides flexibility and maintainability, while environment variables allow overriding settings for different environments (dev, test, prod) without changing code."
   },
   {
     "question": "What's the best way to handle dynamic table content?",
@@ -94,7 +94,7 @@
     ],
     "correct_answer_index": 2,
     "category": "Automation",
-    "explanation": "The correct answer is 'Locating table rows based on unique text in a specific column' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "Using unique text content in a column provides a stable locator even when table structure changes. Absolute XPath and fixed indexes are brittle and break when content changes. Iterating all rows is inefficient and requires more complex logic."
   },
   {
     "question": "What's the output of `print(1 + \"2\" - 1)` in Python?",
@@ -142,7 +142,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Python",
-    "explanation": "The correct answer is 'False' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "Python does not perform type coercion with the == operator. The integer 5 and string \"5\" are different types and values, so the comparison returns False."
   },
   {
     "question": "What is the correct method to launch a browser in Selenium using Python?",
@@ -152,9 +152,9 @@
       "launch()",
       "open()"
     ],
-    "correct_answer_index": 2,
+    "correct_answer_index": 1,
     "category": "Selenium",
-    "explanation": "The correct answer is 'launch()' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "driver.get('url') is the standard Selenium WebDriver method used to navigate to a specified URL. It loads the page and waits for it to complete loading before continuing script execution."
   },
   {
     "question": "What is the best and most idiomatic way of handling exceptions in Python?",
@@ -166,7 +166,7 @@
     ],
     "correct_answer_index": 2,
     "category": "Python",
-    "explanation": "The correct answer is 'Using specific try-except blocks' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "Using specific try-except blocks (e.g., except ValueError, except FileNotFoundError) allows precise error handling, better debugging, and prevents accidentally catching unexpected exceptions that should propagate."
   },
   {
     "question": "In general, what is the best practice for handling unexpected errors (e.g., an element not found) during the execution of an automated functional test?",
@@ -178,7 +178,7 @@
     ],
     "correct_answer_index": 2,
     "category": "Selenium",
-    "explanation": "The correct answer is 'The test should fail immediately at the point of the error, clearly reporting the cause.' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "Tests should fail fast to provide immediate, actionable feedback. Continuing after errors can cascade into false positives/negatives and obscure the root cause. Clear failure reports enable quick debugging."
   },
   {
     "question": "What is the most reliable method to specifically wait for an element to become visible on a web page before interacting with it?",
@@ -190,7 +190,7 @@
     ],
     "correct_answer_index": 2,
     "category": "Selenium",
-    "explanation": "The correct answer is 'Using WebDriverWait with ExpectedConditions.visibility_of_element_located()' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "visibility_of_element_located() waits for the element to be both present in the DOM and visible (not hidden). presence_of_element_located() only checks DOM presence, not visibility. Static sleeps waste time and are unreliable."
   },
   {
     "question": "Given the following Python code, what will be printed to the console?",
@@ -203,7 +203,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Python",
-    "explanation": "The correct answer is '4' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "Sets automatically ignore duplicate values. Adding 3 again has no effect since it's already in the set. After adding 4, the set contains {1, 2, 3, 4}, so len() returns 4."
   },
   {
     "question": "In Selenium, how can you execute a piece of JavaScript code within the context of the current page?",
@@ -215,7 +215,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Selenium",
-    "explanation": "The correct answer is 'driver.execute_script('alert(\"hello\")')' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "driver.execute_script() is the Selenium method for running JavaScript in the browser context. This is useful for interacting with elements not directly accessible via Selenium's API or for custom actions."
   },
   {
     "question": "In the context of test automation, what is the main purpose of a 'smoke test' suite?",
@@ -227,7 +227,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Automation",
-    "explanation": "The correct answer is 'To verify that the most critical functionalities of the application are working after a new build, before more extensive testing is done.' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "Smoke tests are quick, high-level checks that verify the application is stable enough for further testing. They catch major breaks early, saving time by preventing full test suite runs on broken builds."
   },
   {
     "question": "What is the correct way to switch to an iframe with the name 'my_frame' in Selenium?",
@@ -252,7 +252,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Python",
-    "explanation": "The correct answer is 'name = 'World'\nprint(f'Hello, {name}')' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "F-strings (formatted string literals) use the 'f' prefix before the string and evaluate expressions inside curly braces {}. They are the modern, most readable way to format strings in Python 3.6+."
   },
   {
     "question": "In test automation, what is a 'flaky' test?",
@@ -289,7 +289,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Python",
-    "explanation": "The correct answer is 'Lists are mutable (changeable), while tuples are immutable (unchangeable).' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "Lists can be modified after creation (add, remove, change items), while tuples cannot be changed once created. Use tuples for data that shouldn't change, and lists for dynamic collections."
   },
   {
     "question": "What is the purpose of the `finally` block in a Python `try...except` statement?",
@@ -301,7 +301,7 @@
     ],
     "correct_answer_index": 3,
     "category": "Python",
-    "explanation": "The correct answer is 'It contains the code that will be executed regardless of whether an exception occurred or not.' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "The finally block always executes, making it ideal for cleanup operations like closing files, releasing resources, or logging. It runs whether an exception occurs or not, and even if there's a return statement."
   },
   {
     "question": "Which of the following is NOT a valid Selenium locator strategy in the `By` class?",
@@ -325,7 +325,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Automation",
-    "explanation": "The correct answer is 'To structure the test in a human-readable format describing a feature's behavior from a user's perspective.' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "Gherkin's Given-When-Then syntax creates human-readable test scenarios: Given sets preconditions, When describes actions, Then verifies outcomes. This bridges communication between technical and non-technical stakeholders."
   },
   {
     "question": "What will be the output of the following Python list comprehension?",
@@ -350,7 +350,7 @@
     ],
     "correct_answer_index": 0,
     "category": "Selenium",
-    "explanation": "The correct answer is '`find_element()` returns the first matching element or raises an exception if not found, while `find_elements()` returns a list of all matching elements or an empty list if none are found.' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "find_element() expects exactly one match and raises NoSuchElementException if not found. find_elements() returns a list (empty if no matches), which is safer when you're unsure if elements exist or need to check multiple matches."
   },
   {
     "question": "In Python, what is the primary difference between accessing a dictionary value with `my_dict['key']` versus `my_dict.get('key')`?",
@@ -362,7 +362,7 @@
     ],
     "correct_answer_index": 2,
     "category": "Python",
-    "explanation": "The correct answer is '`my_dict['key']` will raise a `KeyError` if the key does not exist, whereas `my_dict.get('key')` will return `None` by default.' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "Bracket notation my_dict['key'] raises KeyError for missing keys, requiring exception handling. The .get() method returns None (or a specified default) for missing keys, making code more defensive and readable."
   },
   {
     "question": "What is the purpose of a Python virtual environment?",
@@ -410,7 +410,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Automation",
-    "explanation": "The correct answer is 'To run the same test function multiple times with different sets of arguments.' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "@pytest.mark.parametrize allows data-driven testing by running the same test with different input values. Each parameter set creates a separate test case, improving coverage without code duplication."
   },
   {
     "question": "Given the following Python code, what is the output of `my_function(1, 2, c=3, d=4)`?",
@@ -423,7 +423,7 @@
     ],
     "correct_answer_index": 0,
     "category": "Python",
-    "explanation": "The correct answer is 'a=1, b=2, args=(), kwargs={'c': 3, 'd': 4}' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "Positional arguments 1 and 2 are assigned to a and b. Since no extra positional args are provided, args is an empty tuple. Named arguments c=3 and d=4 are captured in the kwargs dictionary."
   },
   {
     "question": "Which Selenium method is generally preferred for clearing text from an input field before typing new text?",
@@ -459,7 +459,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Selenium",
-    "explanation": "The correct answer is 'driver.save_screenshot('my_screenshot.png')' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "driver.save_screenshot('filename.png') captures the current browser viewport and saves it to the specified file path. This is invaluable for debugging test failures and documenting test execution."
   },
   {
     "question": "In test automation, what does the principle of 'Data-Driven Testing' refer to?",
@@ -484,7 +484,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Python",
-    "explanation": "The correct answer is '[2, 4]' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "The filter() function applies the lambda to each element, keeping only those where x % 2 == 0 (even numbers). This filters [1,2,3,4,5] to [2,4]."
   },
   {
     "question": "Which code snippet correctly performs a 'drag and drop' action in Selenium?",
@@ -496,7 +496,7 @@
     ],
     "correct_answer_index": 2,
     "category": "Selenium",
-    "explanation": "The correct answer is 'ActionChains(driver).drag_and_drop(source, target).perform()' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "ActionChains(driver).drag_and_drop(source, target).perform() is the concise, idiomatic way to drag an element from source to target. It handles the click-hold-move-release sequence automatically."
   },
   {
     "question": "What is the output of the following Python code?",
@@ -509,7 +509,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Python",
-    "explanation": "The correct answer is 'c ['a', 'b', 'd', 'e']' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "list.pop(2) removes and returns the element at index 2 (zero-based), which is 'c'. The list is modified in place, leaving ['a', 'b', 'd', 'e']."
   },
   {
     "question": "Complete the following Selenium code to wait until an element is clickable.",
@@ -522,7 +522,7 @@
     ],
     "correct_answer_index": 2,
     "category": "Selenium",
-    "explanation": "The correct answer is 'element_to_be_clickable' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "element_to_be_clickable waits until the element is both visible and enabled, ensuring it can actually be clicked. This prevents ElementNotInteractableException errors."
   },
   {
     "question": "Which line of code is required to make a hidden menu visible by hovering the mouse over its parent element?",
@@ -535,7 +535,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Selenium",
-    "explanation": "The correct answer is 'ActionChains(driver).move_to_element(menu_trigger).perform()' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "ActionChains(driver).move_to_element(menu_trigger).perform() simulates hovering the mouse over an element, which triggers CSS :hover effects and reveals hidden menus."
   },
   {
     "question": "What will be printed after running this Python code?",
@@ -548,7 +548,7 @@
     ],
     "correct_answer_index": 3,
     "category": "Python",
-    "explanation": "The correct answer is '[2, 6, 10]' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "The comprehension filters for odd numbers (n % 2 != 0), giving [1, 3, 5], then multiplies each by 2, resulting in [2, 6, 10]."
   },
   {
     "question": "Fill in the blank to complete the code that checks if a checkbox is selected.",
@@ -561,7 +561,7 @@
     ],
     "correct_answer_index": 0,
     "category": "Automation",
-    "explanation": "The correct answer is 'is_selected()' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "is_selected() is a method that returns True if a checkbox, radio button, or option is selected, and False otherwise. Note the parentheses—it's a method, not a property."
   },
   {
     "question": "How do you correctly use ActionChains to press the SHIFT key, type 'hello', and then release the SHIFT key?",
@@ -573,7 +573,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Automation",
-    "explanation": "The correct answer is 'ActionChains(driver).key_down(Keys.SHIFT).send_keys('hello').key_up(Keys.SHIFT).perform()' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "key_down() presses and holds a modifier key, send_keys() types text while it's held, and key_up() releases it. This pattern simulates holding SHIFT while typing, resulting in 'HELLO'."
   },
   {
     "question": "What is the output of this Python code snippet that uses list slicing?",
@@ -586,7 +586,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Python",
-    "explanation": "The correct answer is '['b', 'c', 'd']' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "List slicing [start:end] extracts elements from index start up to (but not including) index end. letters[1:4] gets indices 1, 2, and 3, which are ['b', 'c', 'd']."
   },
   {
     "question": "Complete the Python code to get the text content of a web element.",
@@ -599,7 +599,7 @@
     ],
     "correct_answer_index": 2,
     "category": "Selenium",
-    "explanation": "The correct answer is 'text' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "The .text property (not a method) retrieves the visible text content of a web element. It returns the innerText, excluding HTML tags but including visible child elements' text."
   },
   {
     "question": "Which action is NOT typically performed using the ActionChains class in Selenium?",
@@ -611,7 +611,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Selenium",
-    "explanation": "The correct answer is 'Navigating to a new URL.' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "ActionChains is for complex mouse and keyboard interactions (clicks, drags, hovers). Navigation (driver.get()) is a basic WebDriver method that doesn't require ActionChains."
   },
   {
     "question": "What is the result of the following Python code?",
@@ -624,7 +624,7 @@
     ],
     "correct_answer_index": 1,
     "category": "Python",
-    "explanation": "The correct answer is '[1, 2, 3, 4]' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "list_b = list_a creates a reference to the same list object, not a copy. Modifying list_b also modifies list_a since they point to the same memory. Use list_a.copy() or list(list_a) to create an independent copy."
   },
   {
     "question": "Fill in the blank to navigate the browser to a specific URL.",
@@ -637,7 +637,7 @@
     ],
     "correct_answer_index": 2,
     "category": "Automation",
-    "explanation": "The correct answer is 'get' because it reflects the correct or most idiomatic usage for this concept."
+    "explanation": "driver.get('url') is the standard Selenium WebDriver method to navigate the browser to a specified URL. It waits for the page to load before continuing execution."
   },
   {
     "question": "Which pytest hook is executed before each test function runs?",
