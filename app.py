@@ -1,16 +1,41 @@
 import json
+import os
+import random
+import time
 from flask import Flask, render_template, request, redirect, url_for, session
 
 # Initialize the Flask application
 app = Flask(__name__)
 # A secret key is needed to use sessions, which store data between requests.
 # Change this to a random string for a real application.
-app.secret_key = 'your_very_secret_key'
+app.secret_key = os.environ.get('SECRET_KEY', os.urandom(24))
+
+# Time limit settings
+MAX_TIME_LIMIT_MINUTES = 120
+MIN_TIME_LIMIT_MINUTES = 1
+DEFAULT_TIME_LIMIT_MINUTES = 10
 
 def load_questions():
     """Load questions from the JSON file."""
-    with open('data/questions.json', 'r') as f:
-        return json.load(f)
+    # Get the directory where app.py is located
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    questions_file = os.path.join(base_dir, 'data', 'questions.json')
+    
+    # Check if file exists
+    if not os.path.exists(questions_file):
+        raise FileNotFoundError(f"Questions file not found: {questions_file}")
+    
+    try:
+        with open(questions_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            
+            # Validate that we got a list
+            if not isinstance(data, list) or len(data) == 0:
+                raise ValueError("Questions file must contain a non-empty JSON array")
+                
+            return data
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Invalid JSON in questions file: {e}")
 
 def get_unique_categories(questions_list):
     """Extract unique categories from questions."""
@@ -48,9 +73,6 @@ def start_test():
     This route initializes the test state in the session
     and redirects to the first question.
     """
-    import random
-    import time
-    
     # Get the selected categories
     selected_categories = request.form.getlist('categories')
     
@@ -78,9 +100,9 @@ def start_test():
     # Get the time limit in minutes (default to 10, min 1, max 120)
     time_limit = request.form.get('time_limit', type=int)
     if time_limit is None or time_limit < 1:
-        time_limit = 10
-    elif time_limit > 120:
-        time_limit = 120
+        time_limit = DEFAULT_TIME_LIMIT_MINUTES
+    elif time_limit > MAX_TIME_LIMIT_MINUTES:
+        time_limit = MAX_TIME_LIMIT_MINUTES
     
     # Randomly select questions from the filtered pool
     selected_questions = random.sample(filtered_questions, num_questions)
@@ -103,8 +125,6 @@ def show_question():
     This route handles both displaying the current question (GET) and
     checking the submitted answer (POST).
     """
-    import time
-    
     q_index = session.get('current_question_index', 0)
     selected_indices = session.get('selected_question_indices', [])
     start_time = session.get('start_time', time.time())
@@ -136,18 +156,40 @@ def show_question():
         user_answer = request.form.get('option')
         correct_answer_index = current_question['correct_answer_index']
 
-        # Check if the submitted answer is correct
-        if user_answer is not None and int(user_answer) == correct_answer_index:
-            session['score'] += 1
-        else:
-            # Store wrong answer details for review
+        # Validate that an answer was actually provided
+        if user_answer is None or user_answer == '':
+            # No answer selected - treat as wrong
             wrong_answers = session.get('wrong_answers', [])
             wrong_answers.append({
                 'question_index': selected_indices[q_index],
-                'user_answer': int(user_answer) if user_answer is not None else None,
+                'user_answer': None,
                 'question_number': q_index + 1
             })
             session['wrong_answers'] = wrong_answers
+        else:
+            # Check if the submitted answer is correct
+            try:
+                user_answer_int = int(user_answer)
+                if user_answer_int == correct_answer_index:
+                    session['score'] += 1
+                else:
+                    # Store wrong answer details for review
+                    wrong_answers = session.get('wrong_answers', [])
+                    wrong_answers.append({
+                        'question_index': selected_indices[q_index],
+                        'user_answer': user_answer_int,
+                        'question_number': q_index + 1
+                    })
+                    session['wrong_answers'] = wrong_answers
+            except ValueError:
+                # Invalid answer format - treat as wrong
+                wrong_answers = session.get('wrong_answers', [])
+                wrong_answers.append({
+                    'question_index': selected_indices[q_index],
+                    'user_answer': None,
+                    'question_number': q_index + 1
+                })
+                session['wrong_answers'] = wrong_answers
 
         # Move to the next question
         session['current_question_index'] = q_index + 1
@@ -197,5 +239,4 @@ def review_wrong_answers():
     return render_template('review.html', review_data=review_data)
 
 if __name__ == '__main__':
-    # This allows you to run the app by executing `python app.py`
-    app.run(debug=True)
+    app.run(debug=os.environ.get('FLASK_DEBUG', 'False').lower() == 'true')
