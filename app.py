@@ -104,11 +104,34 @@ def start_test():
     elif time_limit > MAX_TIME_LIMIT_MINUTES:
         time_limit = MAX_TIME_LIMIT_MINUTES
     
+    # Get the shuffle answers option
+    shuffle_answers = request.form.get('shuffle_answers') == 'true'
+    
     # Randomly select questions from the filtered pool
     selected_questions = random.sample(filtered_questions, num_questions)
     
     # Store only the indices of selected questions to reduce session size
     selected_indices = [questions.index(q) for q in selected_questions]
+    
+    # If shuffle is enabled, create a mapping for answer shuffling
+    if shuffle_answers:
+        shuffle_mappings = {}
+        for idx in selected_indices:
+            question = questions[idx]
+            num_options = len(question['options'])
+            # Create a shuffled order
+            shuffled_indices = list(range(num_options))
+            random.shuffle(shuffled_indices)
+            # Find where the correct answer ended up
+            correct_answer_index = question['correct_answer_index']
+            new_correct_index = shuffled_indices.index(correct_answer_index)
+            shuffle_mappings[idx] = {
+                'order': shuffled_indices,
+                'correct_index': new_correct_index
+            }
+        session['shuffle_mappings'] = shuffle_mappings
+    else:
+        session['shuffle_mappings'] = None
     
     # Store the selected question indices and test state in the session
     session['selected_question_indices'] = selected_indices
@@ -117,6 +140,7 @@ def start_test():
     session['wrong_answers'] = []  # Track wrong answers for review
     session['time_limit'] = time_limit * 60  # Convert to seconds
     session['start_time'] = time.time()  # Store the start time
+    session['shuffle_answers'] = shuffle_answers
     return redirect(url_for('show_question'))
 
 @app.route('/question', methods=['GET', 'POST'])
@@ -129,6 +153,7 @@ def show_question():
     selected_indices = session.get('selected_question_indices', [])
     start_time = session.get('start_time', time.time())
     time_limit = session.get('time_limit', 600)  # Default to 10 minutes
+    shuffle_mappings = session.get('shuffle_mappings')
     
     # If no indices stored, use all questions (fallback)
     if not selected_indices:
@@ -144,7 +169,18 @@ def show_question():
     if q_index >= len(selected_indices):
         return redirect(url_for('show_score'))
 
-    current_question = questions[selected_indices[q_index]]
+    current_question_index = selected_indices[q_index]
+    current_question = questions[current_question_index].copy()
+    
+    # Apply shuffling if enabled
+    if shuffle_mappings and current_question_index in shuffle_mappings:
+        mapping = shuffle_mappings[current_question_index]
+        shuffled_order = mapping['order']
+        # Reorder options according to the shuffle mapping
+        original_options = current_question['options']
+        current_question['options'] = [original_options[i] for i in shuffled_order]
+        # Use the new correct answer index for display
+        current_question['correct_answer_index'] = mapping['correct_index']
 
     if request.method == 'POST':
         # Check time again before processing answer
@@ -154,14 +190,19 @@ def show_question():
         
         # User has submitted an answer
         user_answer = request.form.get('option')
-        correct_answer_index = current_question['correct_answer_index']
+        
+        # Determine the correct answer index (considering shuffle)
+        if shuffle_mappings and current_question_index in shuffle_mappings:
+            correct_answer_index = shuffle_mappings[current_question_index]['correct_index']
+        else:
+            correct_answer_index = questions[current_question_index]['correct_answer_index']
 
         # Validate that an answer was actually provided
         if user_answer is None or user_answer == '':
             # No answer selected - treat as wrong
             wrong_answers = session.get('wrong_answers', [])
             wrong_answers.append({
-                'question_index': selected_indices[q_index],
+                'question_index': current_question_index,
                 'user_answer': None,
                 'question_number': q_index + 1
             })
@@ -176,7 +217,7 @@ def show_question():
                     # Store wrong answer details for review
                     wrong_answers = session.get('wrong_answers', [])
                     wrong_answers.append({
-                        'question_index': selected_indices[q_index],
+                        'question_index': current_question_index,
                         'user_answer': user_answer_int,
                         'question_number': q_index + 1
                     })
@@ -185,7 +226,7 @@ def show_question():
                 # Invalid answer format - treat as wrong
                 wrong_answers = session.get('wrong_answers', [])
                 wrong_answers.append({
-                    'question_index': selected_indices[q_index],
+                    'question_index': current_question_index,
                     'user_answer': None,
                     'question_number': q_index + 1
                 })
@@ -225,15 +266,29 @@ def review_wrong_answers():
     if not wrong_answers:
         return redirect(url_for('show_score'))
     
+    shuffle_mappings = session.get('shuffle_mappings')
+    
     # Build a list of wrong answer details
     review_data = []
     for wrong in wrong_answers:
-        question = questions[wrong['question_index']]
+        question_index = wrong['question_index']
+        question = questions[question_index].copy()
+        
+        # Apply shuffling if it was enabled
+        if shuffle_mappings and question_index in shuffle_mappings:
+            mapping = shuffle_mappings[question_index]
+            shuffled_order = mapping['order']
+            original_options = question['options']
+            question['options'] = [original_options[i] for i in shuffled_order]
+            correct_answer_index = mapping['correct_index']
+        else:
+            correct_answer_index = question['correct_answer_index']
+        
         review_data.append({
             'question_number': wrong['question_number'],
             'question': question,
             'user_answer': wrong['user_answer'],
-            'correct_answer_index': question['correct_answer_index']
+            'correct_answer_index': correct_answer_index
         })
     
     return render_template('review.html', review_data=review_data)
