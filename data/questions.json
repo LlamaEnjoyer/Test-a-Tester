@@ -704,5 +704,589 @@
     "category": "Automation",
     "explanation": "The requests library simplifies sending HTTP requests and validating API responses in test automation.",
     "new": true
-  }
-]
+  },
+  {
+    "question": "What will be the output of the following Python code?",
+    "code_snippet": "def multiply(a, b=2, c=3):\n    return a * b * c\n\nresult = multiply(5, c=4)\nprint(result)",
+    "options": [
+      "30",
+      "40",
+      "60",
+      "The code will raise a TypeError"
+    ],
+    "correct_answer_index": 1,
+    "category": "Python",
+    "explanation": "The function is called with a=5 (positional), b=2 (default), and c=4 (keyword). The result is 5 * 2 * 4 = 40."
+  },
+  {
+    "question": "How can you handle alert pop-ups in Selenium?",
+    "code_snippet": "# Assume an alert has appeared on the page\n# How to accept the alert?",
+    "options": [
+      "driver.accept_alert()",
+      "driver.switch_to.alert.accept()",
+      "driver.alert().accept()",
+      "driver.handle_alert(accept=True)"
+    ],
+    "correct_answer_index": 1,
+    "category": "Selenium",
+    "explanation": "driver.switch_to.alert switches context to the alert, and .accept() clicks the OK button. You can also use .dismiss() to cancel or .text to read the alert message."
+  },
+  {
+    "question": "What is the purpose of a test harness in automation testing?",
+    "options": [
+      "A tool that generates random test data for testing purposes.",
+      "A collection of software and test data configured to test a program by running it under varying conditions and monitoring its behavior.",
+      "A specialized IDE for writing automated tests.",
+      "A database that stores all test execution results."
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "A test harness is an environment that provides the infrastructure to execute tests, including drivers, stubs, mock objects, and utilities needed to run tests systematically."
+  },
+  {
+    "question": "What is the output of the following Python code?",
+    "code_snippet": "x = [1, 2, 3]\ny = x[:]\ny.append(4)\nprint(len(x), len(y))",
+    "options": [
+      "3 3",
+      "4 4",
+      "3 4",
+      "4 3"
+    ],
+    "correct_answer_index": 2,
+    "category": "Python",
+    "explanation": "x[:] creates a shallow copy of the list, so y is independent of x. Appending 4 to y doesn't affect x. Therefore, x has length 3 and y has length 4."
+  },
+  {
+    "question": "Which Selenium method allows you to get the value of an element's attribute?",
+    "code_snippet": "input_field = driver.find_element(By.ID, 'username')\n# How to get the 'placeholder' attribute value?",
+    "options": [
+      "input_field.attribute('placeholder')",
+      "input_field.get_attribute('placeholder')",
+      "input_field.attr('placeholder')",
+      "input_field.value_of('placeholder')"
+    ],
+    "correct_answer_index": 1,
+    "category": "Selenium",
+    "explanation": "element.get_attribute('attribute_name') retrieves the value of any HTML attribute, such as id, class, href, value, or custom data attributes."
+  },
+  {
+    "question": "In test-driven development (TDD), when should you write the test code?",
+    "options": [
+      "After implementing the feature completely.",
+      "Before writing the implementation code.",
+      "Only for complex features that are difficult to test manually.",
+      "After the application is deployed to production."
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "TDD follows the Red-Green-Refactor cycle: write a failing test first, then write code to make it pass, then refactor. This ensures code meets requirements and is testable."
+  },
+  {
+    "question": "What will be printed by the following Python code?",
+    "code_snippet": "def outer():\n    x = 10\n    def inner():\n        nonlocal x\n        x = 20\n    inner()\n    print(x)\n\nouter()",
+    "options": [
+      "10",
+      "20",
+      "The code will raise a NameError",
+      "The code will raise a SyntaxError"
+    ],
+    "correct_answer_index": 1,
+    "category": "Python",
+    "explanation": "The 'nonlocal' keyword allows the inner function to modify the variable x from the enclosing outer function's scope. After inner() executes, x is changed to 20."
+  },
+  {
+    "question": "How can you select an option from a dropdown menu in Selenium?",
+    "code_snippet": "from selenium.webdriver.support.ui import Select\n\ndropdown = driver.find_element(By.ID, 'country')\n# How to select the option with visible text 'Canada'?",
+    "options": [
+      "dropdown.select('Canada')",
+      "Select(dropdown).select_by_visible_text('Canada')",
+      "dropdown.click('Canada')",
+      "Select(dropdown).choose('Canada')"
+    ],
+    "correct_answer_index": 1,
+    "category": "Selenium",
+    "explanation": "The Select class provides methods to interact with <select> elements: select_by_visible_text(), select_by_value(), and select_by_index()."
+  },
+  {
+    "question": "What is the primary benefit of parallel test execution in automation?",
+    "options": [
+      "It makes tests easier to write and maintain.",
+      "It reduces the overall test execution time by running multiple tests simultaneously.",
+      "It automatically fixes flaky tests.",
+      "It eliminates the need for test data management."
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "Parallel execution runs tests concurrently across multiple threads or machines, significantly reducing total execution time, especially for large test suites."
+  },
+  {
+    "question": "What is the result of this Python code?",
+    "code_snippet": "my_dict = {'a': 1, 'b': 2, 'c': 3}\nresult = {v: k for k, v in my_dict.items()}\nprint(result)",
+    "options": [
+      "{'a': 1, 'b': 2, 'c': 3}",
+      "{1: 'a', 2: 'b', 3: 'c'}",
+      "{'1': 'a', '2': 'b', '3': 'c'}",
+      "The code will raise a TypeError"
+    ],
+    "correct_answer_index": 1,
+    "category": "Python",
+    "explanation": "Dictionary comprehension {v: k for k, v in my_dict.items()} swaps keys and values, creating a new dictionary where original values become keys."
+  },
+  {
+    "question": "What happens if you call driver.find_element() with an invalid locator strategy in Selenium?",
+    "options": [
+      "It returns None",
+      "It returns an empty list",
+      "It raises a NoSuchElementException",
+      "It raises an InvalidSelectorException"
+    ],
+    "correct_answer_index": 3,
+    "category": "Selenium",
+    "explanation": "An invalid locator (e.g., malformed XPath or CSS selector) raises InvalidSelectorException. NoSuchElementException is raised when the locator is valid but no element matches."
+  },
+  {
+    "question": "What is continuous integration (CI) in the context of test automation?",
+    "options": [
+      "A practice where developers merge code changes frequently, with each merge triggering automated builds and tests.",
+      "A type of integration testing performed manually by QA engineers.",
+      "A deployment strategy where new features are released continuously to production.",
+      "A method of integrating third-party APIs into an application."
+    ],
+    "correct_answer_index": 0,
+    "category": "Automation",
+    "explanation": "CI automates building and testing code changes frequently (often multiple times per day), catching integration issues early and providing fast feedback to developers."
+  },
+  {
+    "question": "What will the following Python code print?",
+    "code_snippet": "numbers = [1, 2, 3, 4, 5]\ntry:\n    print(numbers[10])\nexcept IndexError:\n    print('Index out of range')\nexcept Exception as e:\n    print(f'Other error: {e}')",
+    "options": [
+      "5",
+      "None",
+      "Index out of range",
+      "Other error: list index out of range"
+    ],
+    "correct_answer_index": 2,
+    "category": "Python",
+    "explanation": "Accessing index 10 in a 5-element list raises IndexError. The first matching except block catches it and prints 'Index out of range'. More specific exceptions are caught before general ones."
+  },
+  {
+    "question": "How do you switch back to the main page content after switching to an iframe in Selenium?",
+    "options": [
+      "driver.switch_to.main_content()",
+      "driver.switch_to.parent_frame()",
+      "driver.switch_to.default_content()",
+      "driver.exit_frame()"
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "driver.switch_to.default_content() switches context back to the main page. Use parent_frame() to go up one level in nested iframes, or default_content() to return to the top level."
+  },
+  {
+    "question": "What is a test oracle in software testing?",
+    "options": [
+      "A database that stores expected test results.",
+      "An automated tool that generates test cases.",
+      "A mechanism to determine whether a test has passed or failed by comparing actual results with expected outcomes.",
+      "A senior tester who reviews all test cases before execution."
+    ],
+    "correct_answer_index": 2,
+    "category": "Automation",
+    "explanation": "A test oracle is a source of expected results used to verify test outcomes. It can be specifications, existing systems, or domain knowledge that defines correct behavior."
+  },
+  {
+    "question": "What is the output of this Python code?",
+    "code_snippet": "class Counter:\n    count = 0\n    \n    def __init__(self):\n        Counter.count += 1\n\nc1 = Counter()\nc2 = Counter()\nc3 = Counter()\nprint(Counter.count)",
+    "options": [
+      "0",
+      "1",
+      "3",
+      "The code will raise an AttributeError"
+    ],
+    "correct_answer_index": 2,
+    "category": "Python",
+    "explanation": "Counter.count is a class variable shared across all instances. Each time __init__ runs, it increments the shared counter. Three instances mean count becomes 3."
+  },
+  {
+    "question": "Which method is used to maximize the browser window in Selenium?",
+    "options": [
+      "driver.maximize()",
+      "driver.window.maximize()",
+      "driver.maximize_window()",
+      "driver.set_window_size('max')"
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "driver.maximize_window() maximizes the browser window to fill the screen. This ensures consistent viewport size and can prevent element visibility issues in tests."
+  },
+  {
+    "question": "What is the purpose of a mock object in unit testing?",
+    "options": [
+      "To test the application's performance under load.",
+      "To simulate the behavior of real objects in a controlled way, allowing isolated testing of specific components.",
+      "To automatically generate test data for test cases.",
+      "To record all function calls made during test execution."
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "Mock objects simulate dependencies (databases, APIs, external services) with controlled behavior, enabling isolated unit tests without requiring actual external resources."
+  },
+  {
+    "question": "What will this Python code output?",
+    "code_snippet": "text = 'hello world'\nresult = text.split()[1].upper()\nprint(result)",
+    "options": [
+      "'HELLO'",
+      "'WORLD'",
+      "'hello world'",
+      "'World'"
+    ],
+    "correct_answer_index": 1,
+    "category": "Python",
+    "explanation": "text.split() splits the string into ['hello', 'world']. Index [1] gets 'world', and .upper() converts it to 'WORLD'."
+  },
+  {
+    "question": "How can you scroll to a specific element in Selenium using JavaScript?",
+    "code_snippet": "element = driver.find_element(By.ID, 'footer')\n# How to scroll to this element?",
+    "options": [
+      "driver.scroll_to(element)",
+      "element.scroll_into_view()",
+      "driver.execute_script('arguments[0].scrollIntoView();', element)",
+      "ActionChains(driver).scroll_to_element(element).perform()"
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "driver.execute_script('arguments[0].scrollIntoView();', element) uses JavaScript to scroll the element into the visible area of the browser window."
+  },
+  {
+    "question": "What is the main advantage of using a keyword-driven testing framework?",
+    "options": [
+      "It automatically generates test data for all test cases.",
+      "It allows non-technical users to create tests using predefined keywords without writing code.",
+      "It makes tests run faster than other frameworks.",
+      "It eliminates the need for assertions in test cases."
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "Keyword-driven frameworks abstract test logic into reusable keywords (actions like 'login', 'click_button'), enabling non-programmers to create tests using simple, readable syntax."
+  },
+  {
+    "question": "What is the result of the following Python code?",
+    "code_snippet": "a = [1, 2, 3]\nb = [1, 2, 3]\nprint(a == b, a is b)",
+    "options": [
+      "True True",
+      "False False",
+      "True False",
+      "False True"
+    ],
+    "correct_answer_index": 2,
+    "category": "Python",
+    "explanation": "== checks value equality (True, both lists contain [1, 2, 3]), while 'is' checks identity (False, they're different objects in memory)."
+  },
+  {
+    "question": "What is the correct way to close a specific browser window in Selenium when multiple windows are open?",
+    "options": [
+      "driver.close()",
+      "driver.quit()",
+      "driver.close_window()",
+      "driver.switch_to.window().close()"
+    ],
+    "correct_answer_index": 0,
+    "category": "Selenium",
+    "explanation": "driver.close() closes the current window/tab. driver.quit() closes all windows and ends the WebDriver session. Use window_handles to switch between windows before closing."
+  },
+  {
+    "question": "In automation testing, what is test coverage?",
+    "options": [
+      "The percentage of tests that pass successfully.",
+      "The number of test cases executed per hour.",
+      "A measure of how much of the application code or requirements are tested by the test suite.",
+      "The total time taken to execute all automated tests."
+    ],
+    "correct_answer_index": 2,
+    "category": "Automation",
+    "explanation": "Test coverage measures the extent to which testing exercises the code (code coverage) or requirements (requirement coverage), helping identify untested areas."
+  },
+  {
+    "question": "What will be printed by this Python code?",
+    "code_snippet": "def modify_list(lst):\n    lst = lst + [4, 5]\n    return lst\n\noriginal = [1, 2, 3]\nmodified = modify_list(original)\nprint(original, modified)",
+    "options": [
+      "[1, 2, 3] [1, 2, 3, 4, 5]",
+      "[1, 2, 3, 4, 5] [1, 2, 3, 4, 5]",
+      "[1, 2, 3, 4, 5] [1, 2, 3]",
+      "The code will raise a TypeError"
+    ],
+    "correct_answer_index": 0,
+    "category": "Python",
+    "explanation": "The + operator creates a new list object rather than modifying the original. The reassignment lst = lst + [4, 5] creates a new local reference, leaving 'original' unchanged."
+  },
+  {
+    "question": "How can you get all currently open window handles in Selenium?",
+    "options": [
+      "driver.window_handles",
+      "driver.get_windows()",
+      "driver.all_windows()",
+      "driver.list_handles()"
+    ],
+    "correct_answer_index": 0,
+    "category": "Selenium",
+    "explanation": "driver.window_handles returns a list of all window handle strings. You can iterate through these and use driver.switch_to.window(handle) to switch between windows."
+  },
+  {
+    "question": "What is boundary value analysis in testing?",
+    "options": [
+      "Testing only the maximum values that an input can accept.",
+      "A testing technique that focuses on values at the boundaries of input ranges, where errors are most likely to occur.",
+      "Testing the physical boundaries of the application's user interface.",
+      "A performance testing method that measures response times at the limits of system capacity."
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "Boundary value analysis tests values at the edges of valid ranges (min, max, just below min, just above max) where defects commonly occur due to off-by-one errors."
+  },
+  {
+    "question": "What is the output of this Python code?",
+    "code_snippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 99\nprint(shallow[0][0], deep[0][0])",
+    "options": [
+      "1 1",
+      "99 99",
+      "99 1",
+      "1 99"
+    ],
+    "correct_answer_index": 2,
+    "category": "Python",
+    "explanation": "copy.copy() creates a shallow copy that shares nested objects. copy.deepcopy() creates independent copies of all levels. Modifying original affects shallow but not deep."
+    },
+    {
+      "question": "In Python, what is the primary purpose of a context manager used with the 'with' statement?",
+      "options": [
+        "To guarantee that setup and cleanup of a resource happen reliably, even if an exception is raised",
+        "To improve performance of loop execution",
+        "To automatically cache function return values",
+        "To force garbage collection of unused objects"
+      ],
+      "correct_answer_index": 0,
+      "category": "Python",
+      "explanation": "Context managers implement __enter__ and __exit__ to ensure deterministic acquisition and release of resources (files, locks, network connections) regardless of success or failure inside the block.",
+      "new": true
+    },
+    {
+      "question": "Which statement best describes the difference between an iterable and an iterator in Python?",
+      "options": [
+        "An iterable implements __next__ only; an iterator implements __iter__ only",
+        "An iterable can be looped over and provides an iterator via __iter__; an iterator produces values with __next__ until exhaustion",
+        "They are identical; the terms are interchangeable",
+        "Iterators must be lists; iterables must be generators"
+      ],
+      "correct_answer_index": 1,
+      "category": "Python",
+      "explanation": "Iterables define __iter__ returning an iterator. Iterators implement __next__ (and usually __iter__ returning self) to yield one item at a time until StopIteration.",
+      "new": true
+    },
+    {
+      "question": "What is a key advantage of using a generator function (yield) over building a list and returning it?",
+      "options": [
+        "Generators automatically parallelize execution",
+        "Generators allow lazy production of values, reducing memory consumption for large or infinite sequences",
+        "Generators always run faster than list comprehensions",
+        "Generators prevent exceptions from propagating"
+      ],
+      "correct_answer_index": 1,
+      "category": "Python",
+      "explanation": "Generators yield items one at a time, avoiding storing all results in memory. This is ideal for streaming, large datasets, or potentially unbounded sequences.",
+      "new": true
+    },
+    {
+      "question": "Why is using a mutable object (e.g., []) as a default parameter generally discouraged in Python?",
+      "options": [
+        "It causes a syntax error",
+        "The function becomes significantly slower",
+        "The same object is reused across calls, leading to unintended state sharing",
+        "It prevents the function from accepting keyword arguments"
+      ],
+      "correct_answer_index": 2,
+      "category": "Python",
+      "explanation": "Default parameter values are evaluated once at function definition time. Mutable defaults (like lists or dicts) persist changes between calls, often causing subtle bugs.",
+      "new": true
+    },
+    {
+      "question": "What is the primary benefit of using @dataclass for simple Python classes?",
+      "options": [
+        "It automatically parallelizes attribute access",
+        "It generates common boilerplate methods (e.g., __init__, __repr__, __eq__) based on declared fields",
+        "It encrypts attribute values at runtime",
+        "It forces strict static typing enforcement"
+      ],
+      "correct_answer_index": 1,
+      "category": "Python",
+      "explanation": "@dataclass reduces boilerplate by auto-implementing __init__, __repr__, __eq__, and others from field definitions, improving readability and maintainability.",
+      "new": true
+    },
+    {
+      "question": "Which built-in data structure offers O(1) average-time membership tests for unordered unique elements?",
+      "options": [
+        "List",
+        "Tuple",
+        "Set",
+        "Deque"
+      ],
+      "correct_answer_index": 2,
+      "category": "Python",
+      "explanation": "Sets use hash-based lookup providing average O(1) membership checks, making them ideal for uniqueness and fast containment tests.",
+      "new": true
+    },
+    {
+      "question": "What is the purpose of an __init__.py file in a Python package directory?",
+      "options": [
+        "To declare mandatory type hints for the package",
+        "To mark the directory as a package and optionally define initialization logic or exports",
+        "To improve interpreter performance when importing",
+        "To disable relative imports inside the package"
+      ],
+      "correct_answer_index": 1,
+      "category": "Python",
+      "explanation": "__init__.py indicates a directory is a package and can expose a public API by defining __all__ or running setup code.",
+      "new": true
+    },
+    {
+      "question": "When iterating with index and value over a list, what is the most Pythonic approach?",
+      "options": [
+        "Use for i in range(0, len(items)): value = items[i]",
+        "Use a while loop with manual index increment",
+        "Use enumerate(items) to get (index, value) pairs directly",
+        "Convert the list to a dict first"
+      ],
+      "correct_answer_index": 2,
+      "category": "Python",
+      "explanation": "enumerate() yields (index, item) pairs cleanly and readably without manual index management, reducing off-by-one errors.",
+      "new": true
+    },
+    {
+      "question": "In Selenium, what is the main difference between implicit and explicit waits?",
+      "options": [
+        "Implicit waits retry only click actions; explicit waits apply to navigation",
+        "Implicit waits poll for all element finds up to a timeout; explicit waits target a specific condition for a specific element",
+        "Explicit waits are deprecated; implicit waits are preferred",
+        "There is no difference—both behave exactly the same"
+      ],
+      "correct_answer_index": 1,
+      "category": "Selenium",
+      "explanation": "Implicit waits set a global maximum time for locating elements. Explicit waits use WebDriverWait + ExpectedConditions for fine-grained readiness checks like visibility or clickability.",
+      "new": true
+    },
+    {
+      "question": "What is a reliable strategy for waiting on dynamic AJAX-loaded content?",
+      "options": [
+        "Always add a fixed time.sleep(10) before interactions",
+        "Check document.readyState repeatedly with JavaScript",
+        "Use an explicit wait for a stable, post-load element/state that appears only after the AJAX completes",
+        "Reload the page until the element appears"
+      ],
+      "correct_answer_index": 2,
+      "category": "Selenium",
+      "explanation": "Waiting for a deterministic element or condition (e.g., visibility of a result container) is more stable than static sleeps and avoids brittle polling hacks.",
+      "new": true
+    },
+    {
+      "question": "What is the recommended way to upload a file using Selenium when an <input type='file'> is present?",
+      "options": [
+        "Drag the file onto the browser window",
+        "Use ActionChains to simulate OS-level file dialogs",
+        "Send the absolute file path string with send_keys() to the file input",
+        "Execute JavaScript to bypass the control"
+      ],
+      "correct_answer_index": 2,
+      "category": "Selenium",
+      "explanation": "Providing the file path via element.send_keys(path) leverages native browser handling of file inputs without interacting with OS dialogs.",
+      "new": true
+    },
+    {
+      "question": "How can Shadow DOM elements typically be accessed in Selenium when standard locators fail?",
+      "options": [
+        "By using By.SHADOW directly",
+        "By executing JavaScript to traverse shadowRoot and query selectors inside it",
+        "By switching frames with switch_to.shadow()",
+        "By enabling implicit shadow mode in capabilities"
+      ],
+      "correct_answer_index": 1,
+      "category": "Selenium",
+      "explanation": "Selenium does not natively pierce shadow boundaries; execute_script retrieving element.shadowRoot then querySelector within is the common approach.",
+      "new": true
+    },
+    {
+      "question": "Why is heavy reliance on brittle XPath like //div[3]/span[2] discouraged?",
+      "options": [
+        "It is slower than CSS by a factor of 100 always",
+        "Such absolute positional XPaths often break with minor DOM changes; semantic attributes or stable IDs improve maintainability",
+        "Browsers block positional XPath selectors",
+        "It cannot be used in headless mode"
+      ],
+      "correct_answer_index": 1,
+      "category": "Selenium",
+      "explanation": "Absolute or index-heavy XPaths are fragile. Prefer descriptive locators: IDs, data-* attributes, accessible labels, or relative XPath tied to stable anchors.",
+      "new": true
+    },
+    {
+      "question": "What does the 'test pyramid' concept emphasize in automation strategy?",
+      "options": [
+        "Invest mostly in end-to-end UI tests and very few unit tests",
+        "A broad base of fast unit tests, a middle layer of service/API tests, and a thin layer of slower UI tests",
+        "Eliminate manual exploratory testing entirely",
+        "Write only integration tests to reduce duplication"
+      ],
+      "correct_answer_index": 1,
+      "category": "Automation",
+      "explanation": "The pyramid favors many fast, reliable unit tests, fewer service-level tests, and minimal high-cost UI tests for efficiency and fast feedback.",
+      "new": true
+    },
+    {
+      "question": "What is a primary benefit of tagging tests (e.g., @pytest.mark.slow)?",
+      "options": [
+        "Tags make tests run faster automatically",
+        "Tags allow selective execution (e.g., skipping slow tests in quick feedback cycles)",
+        "Tags enforce code coverage thresholds",
+        "Tags disable retries for flaky tests"
+      ],
+      "correct_answer_index": 1,
+      "category": "Automation",
+      "explanation": "Marking tests enables targeted subsets (fast vs slow, regression vs smoke), optimizing pipeline duration and focus.",
+      "new": true
+    },
+    {
+      "question": "What distinguishes a mock from a stub in testing terminology?",
+      "options": [
+        "Mocks and stubs are identical abstractions",
+        "A stub provides canned responses; a mock also records interactions for behavioral verification",
+        "A stub is dynamic; a mock is static",
+        "Mocks can only be used in UI tests"
+      ],
+      "correct_answer_index": 1,
+      "category": "Automation",
+      "explanation": "Stubs supply predetermined data. Mocks add expectations/verification of method calls, arguments, and ordering to assert interactions.",
+      "new": true
+    },
+    {
+      "question": "Which approach most effectively reduces flakiness in UI tests?",
+      "options": [
+        "Increase all sleeps by 5 seconds",
+        "Use explicit waits and stable locators; isolate non-deterministic dependencies (network, time) with mocks where possible",
+        "Retry failed tests indefinitely",
+        "Run tests only on fastest hardware"
+      ],
+      "correct_answer_index": 1,
+      "category": "Automation",
+      "explanation": "Deterministic waits plus resilient locators and isolation of variable external factors cut intermittent failures far better than arbitrary delays or blind retries.",
+      "new": true
+    },
+    {
+      "question": "When is it a good time to refactor test code?",
+      "options": [
+        "Only when all production features are complete",
+        "When duplication, unclear intent, or brittle patterns appear, to maintain readability and reduce maintenance cost",
+        "Never—refactoring tests risks masking product defects",
+        "Only after code coverage exceeds 95%"
+      ],
+      "correct_answer_index": 1,
+      "category": "Automation",
+      "explanation": "Refactoring combats duplication and fragility, keeping the test suite sustainable and fast to evolve as the application changes.",
+      "new": true
+    }
+  ]
