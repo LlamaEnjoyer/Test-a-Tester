@@ -1288,5 +1288,623 @@
       "category": "Automation",
       "explanation": "Refactoring combats duplication and fragility, keeping the test suite sustainable and fast to evolve as the application changes.",
       "new": true
+    },
+    {
+      "question": "In ISTQB terminology, what is the main purpose of acceptance testing?",
+      "options": [
+        "To evaluate system performance under load",
+        "To verify the system meets user and business needs before deployment",
+        "To integrate individual components into a working system",
+        "To replace the need for regression testing"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Acceptance testing checks whether the system satisfies agreed user/business requirements and is ready for operational use (e.g. User, Operational, Contract, Regulatory)."
+    },
+    {
+      "question": "Which statement best describes 'verification' versus 'validation'?",
+      "options": [
+        "Verification ensures the product is built right; validation ensures the right product is built",
+        "Verification is dynamic; validation is static",
+        "Validation applies only to performance tests",
+        "There is no formal difference in ISTQB"
+      ],
+      "correct_answer_index": 0,
+      "category": "ISTQB",
+      "explanation": "Verification: are we building the product right (conformance to specs). Validation: are we building the right product (meets user needs)."
+    },
+    {
+      "question": "What is the primary goal of regression testing?",
+      "options": [
+        "To confirm new code fixes the reported defect",
+        "To ensure that changes have not introduced new defects in unchanged areas",
+        "To validate acceptance criteria for a new feature",
+        "To stress the system at boundary conditions"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Regression testing re-executes previously run tests to detect unintended side effects after changes (defect fixes, enhancements, environment changes)."
+    },
+    {
+      "question": "Equivalence Partitioning is BEST used to...",
+      "options": [
+        "Test every possible input value individually",
+        "Reduce the number of test cases by grouping inputs expected to behave similarly",
+        "Prove 100% absence of defects",
+        "Prioritize performance-related requirements"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Equivalence Partitioning divides input (or output) domains into classes expected to be treated the same, allowing representative test values and fewer cases."
+    },
+    {
+      "question": "Boundary Value Analysis focuses on...",
+      "options": [
+        "Only typical (mid-range) values",
+        "Values just at, below, and above the edges of equivalence classes",
+        "Random sampling within large datasets",
+        "Exploratory assessment of UI usability"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "BVA targets the extremes (min, max) and just inside/outside boundaries where off-by-one defects often occur."
+    },
+    {
+      "question": "In ISTQB terms, what is a 'failure'?",
+      "options": [
+        "The human error that causes a problem",
+        "A deviation of the software from expected behavior during execution",
+        "The root cause found in the code",
+        "A missing requirement in the specification"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Failure: observable deviation during execution. Defect/Fault: the flaw in the software. Error: human action leading to a defect."
+    },
+    {
+      "question": "Which activity is characteristic of STATIC testing?",
+      "options": [
+        "Executing the system with test cases",
+        "Reviewing requirements documents for ambiguity",
+        "Running load tests to find scalability limits",
+        "Performing exploratory sessions on the deployed app"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Static testing (reviews, walkthroughs, static analysis) examines artifacts without executing code to find defects early (ambiguities, omissions, style issues)."
+    },
+    {
+      "question": "Risk-based testing prioritizes tests based on...",
+      "options": [
+        "Tester preference",
+        "Module size only",
+        "Impact and likelihood of potential failures",
+        "The number of available automation tools"
+      ],
+      "correct_answer_index": 2,
+      "category": "ISTQB",
+      "explanation": "Risk = likelihood x impact. Higher risk areas get more/earlier testing effort to reduce product and project risk."
+    },
+    {
+      "question": "What is an exit (completion) criterion for a test level?",
+      "options": [
+        "A condition that triggers defect creation",
+        "A set of conditions that must be satisfied to declare testing for that level finished",
+        "A mandatory automation framework requirement",
+        "An informal note placed in source code"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Exit criteria define when testing can conclude (e.g., % coverage achieved, defect density below threshold, all high-priority defects resolved)."
+    },
+    {
+      "question": "Root cause analysis aims to...",
+      "options": [
+        "Assign blame for the defect",
+        "Identify the underlying source of a problem to prevent recurrence",
+        "Increase the number of logged defects",
+        "Replace functional testing entirely"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Root cause analysis looks beyond the symptom to prevent future occurrences (e.g., process gaps, misunderstanding of requirements)."
+    },
+    {
+      "question": "Which test level focuses on verifying interactions between integrated components?",
+      "options": [
+        "Unit Testing",
+        "Integration Testing",
+        "System Testing",
+        "Acceptance Testing"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Integration testing validates interfaces and interactions between combined units or components before full system testing." 
+    },
+    {
+      "question": "What is a key benefit of test independence?",
+      "options": [
+        "Testers always find more defects than developers",
+        "Reduced bias leading to more objective assessment of quality",
+        "Eliminates the need for unit tests",
+        "Guarantees zero defects in production"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Independent testers provide an unbiased view, increasing the chance of detecting issues developers may overlook." 
+    },
+    {
+      "question": "Which test design technique is most appropriate when business rules are expressed as combinations of conditions producing actions?",
+      "options": [
+        "Boundary Value Analysis",
+        "Decision Table Testing",
+        "State Transition Testing",
+        "Use Case Testing"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Decision tables model input conditions and resulting actions, ideal for complex business rule combinations." 
+    },
+    {
+      "question": "State Transition Testing is BEST applied when...",
+      "options": [
+        "Inputs map to discount percentages",
+        "There is navigation across independent pages only",
+        "The system behavior changes based on previous events",
+        "Only arithmetic calculations are performed"
+      ],
+      "correct_answer_index": 2,
+      "category": "ISTQB",
+      "explanation": "State transition testing targets systems whose output depends on prior states (e.g. login attempts, workflow progression)." 
+    },
+    {
+      "question": "Error Guessing relies primarily on...",
+      "options": [
+        "Formal specification coverage",
+        "Tester experience and intuition",
+        "Mathematical input partitioning",
+        "Tool-assisted static analysis"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Error Guessing is an experience-based technique where testers anticipate likely defect areas from past patterns." 
+    },
+    {
+      "question": "Exploratory Testing is characterized by...",
+      "options": [
+        "Pre-scripted test cases only",
+        "Simultaneous learning, test design, and execution",
+        "Exclusive use of automation frameworks",
+        "Formal traceability to every requirement before execution"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Exploratory testing blends learning and dynamic test design during execution to probe areas not fully specified." 
+    },
+    {
+      "question": "Which document defines the overall approach for testing across the organization or product line?",
+      "options": [
+        "Test Plan",
+        "Test Strategy",
+        "Defect Report",
+        "Release Notes"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "A test strategy sets high-level principles and approaches; a test plan operationalizes these for a specific project or release." 
+    },
+    {
+      "question": "A key purpose of a Requirements Traceability Matrix (RTM) is to...",
+      "options": [
+        "Measure execution time of each test",
+        "Map requirements to test cases ensuring coverage",
+        "Rank defects by severity",
+        "Eliminate redundant code paths"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Traceability matrices link requirements to design, test cases, and outcomes to demonstrate coverage and identify gaps." 
+    },
+    {
+      "question": "Which is a typical Test Closure activity?",
+      "options": [
+        "Defining entry criteria",
+        "Designing new test cases",
+        "Archiving testware and analyzing lessons learned",
+        "Executing regression tests for a new sprint"
+      ],
+      "correct_answer_index": 2,
+      "category": "ISTQB",
+      "explanation": "Closure includes collecting testware, summarizing results, evaluating exit criteria, and documenting lessons learned." 
+    },
+    {
+      "question": "Alpha testing is conducted...",
+      "options": [
+        "Externally by end-users only",
+        "Internally at the developer's site before public release",
+        "After beta testing concludes",
+        "Only for performance benchmarking"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Alpha testing occurs at the developer site with internal or limited external participants prior to broader beta release." 
+    },
+    {
+      "question": "Beta testing is typically performed to...",
+      "options": [
+        "Replace system testing",
+        "Collect real-world feedback from external users in operational environments",
+        "Guarantee zero known defects at release",
+        "Validate unit test coverage"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Beta testing exposes the product to external users to gather usability and reliability feedback in realistic contexts." 
+    },
+    {
+      "question": "Maintenance testing is triggered MOST often by...",
+      "options": [
+        "Daily stand-up meetings",
+        "Changes like patches, migrations, or environment updates",
+        "Unit test failures only",
+        "Database backups"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Maintenance testing validates that updates (defect fixes, environment upgrades, data migrations) haven't harmed existing functionality." 
+    },
+    {
+      "question": "Risk likelihood refers to...",
+      "options": [
+        "The severity of user impact",
+        "The probability the failure will occur",
+        "The number of executed test cases",
+        "The cost of mitigating a defect"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Risk combines likelihood (probability of occurrence) and impact (consequence if it occurs). Both guide prioritization." 
+    },
+    {
+      "question": "Which metric helps monitor test progress effectively?",
+      "options": [
+        "Number of developer code commits",
+        "Percentage of planned test cases executed",
+        "Lines of code per module",
+        "CPU utilization at runtime"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Execution progress metrics (e.g., % executed, pass/fail counts, defect discovery rate) support monitoring and control." 
+    },
+    {
+      "question": "Dynamic testing differs from static testing because it...",
+      "options": [
+        "Inspects artifacts without running code",
+        "Executes code to observe behavior",
+        "Cannot find runtime failures",
+        "Requires only informal reviews"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Dynamic testing involves executing software to evaluate outcomes; static testing analyzes artifacts without execution." 
+    },
+    {
+      "question": "Decision table testing is MOST useful when...",
+      "options": [
+        "System response depends on multiple condition combinations",
+        "Only numeric boundary conditions exist",
+        "User interface layout is unstable",
+        "Memory leaks must be detected"
+      ],
+      "correct_answer_index": 0,
+      "category": "ISTQB",
+      "explanation": "Decision tables clarify complex combinations of conditions and corresponding actions, supporting thorough coverage of rule sets." 
+    },
+    {
+      "question": "Pairwise (all-pairs) testing primarily reduces...",
+      "options": [
+        "Total combinations needing execution while retaining defect detection for interaction faults",
+        "Defect severity",
+        "Need for boundary tests",
+        "Traceability documentation"
+      ],
+      "correct_answer_index": 0,
+      "category": "ISTQB",
+      "explanation": "Pairwise testing selects cases covering all possible pairs of parameter values, shrinking test count while exposing many interaction defects." 
+    },
+    {
+      "question": "What BEST describes regression test selection after a change?",
+      "options": [
+        "Retest only the modified lines",
+        "Retest changed areas plus impacted functionality based on dependency analysis",
+        "Skip previously passing tests",
+        "Execute performance tests only"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Effective regression selection targets changed code and related areas likely influenced by the modification (data flows, interfaces)." 
+    },
+    {
+      "question": "Which is an example of a non-functional test type?",
+      "options": [
+        "Boundary value test",
+        "Usability test",
+        "Decision table test",
+        "Equivalence partition test"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Non-functional testing addresses attributes like usability, performance, reliability, and security." 
+    },
+    {
+      "question": "Shift-left testing emphasizes...",
+      "options": [
+        "Delaying tests until after deployment",
+        "Starting testing earlier in the lifecycle to detect defects sooner",
+        "Only automating UI tests",
+        "Removing unit tests entirely"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Shift-left moves test activities earlier (requirements/design/unit) to reduce late defect discovery costs." 
+    },
+    {
+      "question": "An INCIDENT report (defect report) typically includes...",
+      "options": [
+        "Future sprint capacity",
+        "Steps to reproduce, observed vs expected results, and severity",
+        "Complete source code diff",
+        "List of all past releases"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Incident reports capture reproducible steps, environment, observed behavior, expected behavior, classification (severity/priority)." 
+    },
+    {
+      "question": "Test monitoring differs from test control by...",
+      "options": [
+        "Control collects status; monitoring reacts to deviations",
+        "Monitoring collects status; control applies corrective actions",
+        "They are identical in scope",
+        "Monitoring only applies after closure"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Monitoring gathers status metrics; control uses that data to steer activities (reallocation, re-planning)." 
+    },
+    {
+      "question": "Which activity is NOT part of static testing?",
+      "options": [
+        "Code walkthrough",
+        "Requirements review",
+        "Unit test execution",
+        "Design inspection"
+      ],
+      "correct_answer_index": 2,
+      "category": "ISTQB",
+      "explanation": "Static testing examines artifacts (requirements, design, code) without executing them. Unit test execution is dynamic testing." 
+    },
+    {
+      "question": "Which review type is the MOST formal and typically follows a defined entry/exit criteria with logged defects?",
+      "options": [
+        "Informal review",
+        "Walkthrough",
+        "Technical review",
+        "Inspection"
+      ],
+      "correct_answer_index": 3,
+      "category": "ISTQB",
+      "explanation": "Inspections are highly formal with defined roles (moderator, reader, author, scribe), checklists, metrics, and documented defects." 
+    },
+    {
+      "question": "Which maintenance type involves adapting software to changes in its environment (e.g., new OS version)?",
+      "options": [
+        "Corrective maintenance",
+        "Adaptive maintenance",
+        "Perfective maintenance",
+        "Preventive maintenance"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Adaptive maintenance modifies the product to remain usable in a changed environment (platform, regulations)." 
+    },
+    {
+      "question": "Improving performance and maintainability without adding new functionality BEST describes...",
+      "options": [
+        "Corrective maintenance",
+        "Adaptive maintenance",
+        "Perfective maintenance",
+        "Emergency maintenance"
+      ],
+      "correct_answer_index": 2,
+      "category": "ISTQB",
+      "explanation": "Perfective maintenance enhances quality attributes (performance, usability, maintainability) of existing functionality." 
+    },
+    {
+      "question": "Which maintenance type aims to reduce the probability of future failures by refactoring or removing latent defects?",
+      "options": [
+        "Preventive maintenance",
+        "Corrective maintenance",
+        "Perfective maintenance",
+        "Adaptive maintenance"
+      ],
+      "correct_answer_index": 0,
+      "category": "ISTQB",
+      "explanation": "Preventive maintenance anticipates issues (e.g., refactoring risky modules) to prevent future failures." 
+    },
+    {
+      "question": "Which SDLC phase typically provides the primary test basis for System Testing?",
+      "options": [
+        "Unit design specifications",
+        "Component implementation details",
+        "Requirements and functional specifications",
+        "Deployment scripts"
+      ],
+      "correct_answer_index": 2,
+      "category": "ISTQB",
+      "explanation": "System testing validates the whole system against requirements, use cases, functional and non-functional specifications." 
+    },
+    {
+      "question": "Which sequence BEST represents high-level STLC (Software Testing Life Cycle) activities?",
+      "options": [
+        "Test planning -> Test analysis & design -> Environment setup -> Test execution -> Reporting -> Closure",
+        "Test execution -> Planning -> Design -> Closure -> Analysis",
+        "Design -> Closure -> Planning -> Execution",
+        "Planning -> Coding -> Execution -> Release"
+      ],
+      "correct_answer_index": 0,
+      "category": "ISTQB",
+      "explanation": "Typical STLC flow: Planning, Analysis & Design, Environment/Setup, Implementation (testware), Execution, Reporting/Monitoring, Closure." 
+    },
+    {
+      "question": "Statement coverage measures...",
+      "options": [
+        "Percentage of decision outcomes exercised",
+        "Percentage of executable statements executed",
+        "Percentage of all possible paths executed",
+        "Percentage of requirements traced to tests"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Statement coverage counts executed statements vs total executable statements, indicating breadth of basic code execution." 
+    },
+    {
+      "question": "Branch (decision) coverage requires...",
+      "options": [
+        "Each boolean sub-condition be True and False",
+        "Each possible path through the code be taken",
+        "Each decision (e.g., if, switch) have all outcomes executed at least once",
+        "Each loop iterate maximum times"
+      ],
+      "correct_answer_index": 2,
+      "category": "ISTQB",
+      "explanation": "Branch (decision) coverage ensures every decision outcome (True/False or each case) executes at least once." 
+    },
+    {
+      "question": "Condition coverage differs from decision coverage by requiring...",
+      "options": [
+        "Every individual atomic condition within a decision evaluates both True and False",
+        "All paths be executed",
+        "No unreachable code exist",
+        "All loops reach boundary values"
+      ],
+      "correct_answer_index": 0,
+      "category": "ISTQB",
+      "explanation": "Condition coverage targets each atomic boolean expression inside composite decisions separately (True & False)." 
+    },
+    {
+      "question": "Path coverage is often impractical because...",
+      "options": [
+        "It cannot find defects",
+        "The number of paths can grow exponentially with loops and branches",
+        "It ignores decisions",
+        "It requires only manual testing"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Path coverage attempts to execute all distinct execution paths; loops and nested branches make paths explode combinatorially." 
+    },
+    {
+      "question": "Which coverage level conceptually subsumes statement and branch coverage?",
+      "options": [
+        "Condition coverage",
+        "Path coverage",
+        "Requirements coverage",
+        "Error guessing"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "If all execution paths are covered, every statement and branch is necessarily exercised (though full path coverage is rarely feasible)." 
+    },
+    {
+      "question": "Which is the BEST example of an exit criterion?",
+      "options": [
+        "Start executing high priority test cases",
+        "90% statement coverage achieved with all high severity defects fixed",
+        "Assign testers to new features",
+        "Begin defect triage meetings"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Exit criteria are conditions to conclude testing (e.g., coverage thresholds met, critical defects resolved, residual risk acceptable)." 
+    },
+    {
+      "question": "A common metric used to assess readiness against exit criteria is...",
+      "options": [
+        "Number of lines of code added",
+        "Defect density in executed modules",
+        "Developer satisfaction score",
+        "Time spent in code reviews"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Defect density (defects per size unit or per function point) helps evaluate residual risk vs exit criteria thresholds." 
+    }
+    ,
+    {
+      "question": "In a layered automated test strategy, which test type typically provides the fastest feedback with the highest isolation of failures?",
+      "options": [
+        "Unit tests",
+        "End-to-end UI tests",
+        "Exploratory tests",
+        "User acceptance tests"
+      ],
+      "correct_answer_index": 0,
+      "category": "Automation",
+      "explanation": "Unit tests execute small, isolated code units in-memory without external dependencies, giving very fast, precise feedback on defects.",
+      "new": true
+    },
+    {
+      "question": "What is the primary advantage of emphasizing API/service-level tests over UI tests in an automation suite?",
+      "options": [
+        "They require no maintenance once written",
+        "They eliminate the need for any UI testing",
+        "They are faster and less brittle, providing earlier detection of logic or contract defects",
+        "They automatically generate complete performance metrics"
+      ],
+      "correct_answer_index": 2,
+      "category": "Automation",
+      "explanation": "API tests bypass fragile presentation layers, run quickly, and validate business logic and contracts early—reducing reliance on slower, brittle UI tests.",
+      "new": true
+    },
+    {
+      "question": "In pytest, why would you use a session-scoped fixture for initializing an expensive external dependency (e.g., a Dockerized service)?",
+      "options": [
+        "To force each test to recreate the dependency for isolation",
+        "To ensure the dependency persists across all tests, amortizing setup cost",
+        "Because session scope disables teardown logic",
+        "It automatically parallelizes all tests using the fixture"
+      ],
+      "correct_answer_index": 1,
+      "category": "Automation",
+      "explanation": "Session-scoped fixtures initialize once per test session, dramatically reducing redundant costly setup while still allowing controlled teardown.",
+      "new": true
+    },
+    {
+      "question": "Which strategy MOST effectively keeps automated test data deterministic across runs?",
+      "options": [
+        "Reusing and mutating shared data created by previous test executions",
+        "Generating random data without any seeding policy",
+        "Resetting the environment and loading a known seeded dataset before the suite starts",
+        "Hardcoding dynamic identifiers directly in test scripts"
+      ],
+      "correct_answer_index": 2,
+      "category": "Automation",
+      "explanation": "A clean environment plus a known seeded dataset removes hidden dependencies and flakiness caused by residual or randomized state.",
+      "new": true
+    },
+    {
+      "question": "What distinguishes Continuous Delivery from Continuous Deployment in an automated pipeline?",
+      "options": [
+        "Continuous Delivery automatically deploys every commit straight to production",
+        "Continuous Deployment requires manual packaging while Delivery skips testing",
+        "Continuous Delivery ensures every change is always in a deployable state; Continuous Deployment actually releases each change automatically",
+        "There is no practical difference; the terms are interchangeable"
+      ],
+      "correct_answer_index": 2,
+      "category": "Automation",
+      "explanation": "Continuous Delivery keeps software releasable at all times with automated quality gates; Continuous Deployment takes the final step of automatically releasing each passed change to production.",
+      "new": true
     }
   ]
