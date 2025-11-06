@@ -1852,8 +1852,7 @@
       ],
       "correct_answer_index": 0,
       "category": "Automation",
-      "explanation": "Unit tests execute small, isolated code units in-memory without external dependencies, giving very fast, precise feedback on defects.",
-      "new": true
+      "explanation": "Unit tests execute small, isolated code units in-memory without external dependencies, giving very fast, precise feedback on defects."
     },
     {
       "question": "What is the primary advantage of emphasizing API/service-level tests over UI tests in an automation suite?",
@@ -1865,8 +1864,7 @@
       ],
       "correct_answer_index": 2,
       "category": "Automation",
-      "explanation": "API tests bypass fragile presentation layers, run quickly, and validate business logic and contracts early—reducing reliance on slower, brittle UI tests.",
-      "new": true
+      "explanation": "API tests bypass fragile presentation layers, run quickly, and validate business logic and contracts early—reducing reliance on slower, brittle UI tests."
     },
     {
       "question": "In pytest, why would you use a session-scoped fixture for initializing an expensive external dependency (e.g., a Dockerized service)?",
@@ -1878,8 +1876,7 @@
       ],
       "correct_answer_index": 1,
       "category": "Automation",
-      "explanation": "Session-scoped fixtures initialize once per test session, dramatically reducing redundant costly setup while still allowing controlled teardown.",
-      "new": true
+      "explanation": "Session-scoped fixtures initialize once per test session, dramatically reducing redundant costly setup while still allowing controlled teardown."
     },
     {
       "question": "Which strategy MOST effectively keeps automated test data deterministic across runs?",
@@ -1891,8 +1888,199 @@
       ],
       "correct_answer_index": 2,
       "category": "Automation",
-      "explanation": "A clean environment plus a known seeded dataset removes hidden dependencies and flakiness caused by residual or randomized state.",
-      "new": true
+      "explanation": "A clean environment plus a known seeded dataset removes hidden dependencies and flakiness caused by residual or randomized state."
+    },
+    {
+      "question": "Which of the following is a fundamental test process activity?",
+      "options": [
+        "Test planning and control",
+        "Test implementation and execution",
+        "Evaluating exit criteria and reporting",
+        "All of the above"
+      ],
+      "correct_answer_index": 3,
+      "category": "ISTQB",
+      "explanation": "The fundamental test process activities include planning and control, implementation and execution, and evaluating exit criteria and reporting."
+    },
+    {
+      "question": "What is the main purpose of static testing?",
+      "options": [
+        "To find defects in the code by executing it",
+        "To find defects by reviewing documents like requirements, design, or code without executing it",
+        "To test the system's performance under load",
+        "To validate that the system meets user needs"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "The main purpose of static testing is to find defects by reviewing documents like requirements, design, or code without executing it."
+    },
+    {
+      "question": "Which testing principle states that 'testing can show that defects are present, but cannot prove that there are no defects'?",
+      "options": [
+        "Exhaustive testing is impossible",
+        "Defect clustering",
+        "Testing is context-dependent",
+        "Absence-of-errors fallacy"
+      ],
+      "correct_answer_index": 0,
+      "category": "ISTQB",
+      "explanation": "While testing can't prove the absence of defects, the Exhaustive testing is impossible principle directly addresses the inability to test all possible inputs and paths, which is why you can't prove zero defects."
+    },
+    {
+      "question": "Which technique is a type of white-box testing?",
+      "options": [
+        "Equivalence Partitioning",
+        "Boundary Value Analysis",
+        "Decision Coverage",
+        "State Transition Testing"
+      ],
+      "correct_answer_index": 2,
+      "category": "ISTQB",
+      "explanation": "Decision Coverage is a white-box testing technique that ensures each decision in the code has been executed with all possible outcomes."
+    },
+    {
+      "question": "Which test level typically focuses on finding defects in the complete, integrated system to ensure it meets the non-functional requirements (like performance or security) and the overall system specifications?",
+      "options": [
+        "System Testing",
+        "Integration Testing",
+        "Component (Unit) Testing",
+        "User Acceptance Testing"
+      ],
+      "correct_answer_index": 0,
+      "category": "ISTQB",
+      "explanation": "System testing is where you test the entire, integrated system against the system requirements specification. This is the first level where non-functional characteristics (like performance, reliability, and security) are usually formally tested."
+    },
+    {
+      "question": "What is the primary goal of Test Control within the fundamental test process?",
+      "options": [
+        "To define the test approach, estimate the effort, and determine the resources needed",
+        "To compare actual progress against the test plan and decide on any necessary actions to meet the objectives",
+        "To specify the test conditions and design the test cases",
+        "To report on the test activities and provide test summary reports"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Test Control involves monitoring the progress of testing activities, comparing actual progress against the test plan, and taking corrective actions as needed to ensure that testing objectives are met."
+    },
+    {
+      "question": "When designing test cases using Boundary Value Analysis (BVA) for an input field that accepts values between 1 and 100 (inclusive), which of the following is the most complete set of test input values?",
+      "options": [
+        "1, 100",
+        "0, 1, 100, 101",
+        "1, 2, 99, 100",
+        "0, 1, 2, 99, 100, 101"
+      ],
+      "correct_answer_index": 3,
+      "category": "ISTQB",
+      "explanation": "Boundary Value Analysis focuses on testing at the edges of input ranges. The most complete set includes values just below, at, and just above the boundaries: 0 (below lower boundary), 1 (lower boundary), 2 (just above lower boundary), 99 (just below upper boundary), 100 (upper boundary), and 101 (above upper boundary)."
+    },
+    {
+      "question": "Which of the following describes a key objective of Integration Testing?",
+      "options": [
+        "To ensure the software meets the needs of the end user or customer",
+        "To test interfaces between components, interactions with different parts of a system, or interactions with external systems",
+        "To check that a newly modified or enhanced system still performs correctly after changes",
+        "To prove the completeness of the system to the technical team before release"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Integration Testing focuses on testing the interactions between integrated components or systems. The key objective is to identify issues that may arise from these interactions, ensuring that the integrated system functions as intended."
+    },
+    {
+      "question": "Which technique is used to measure the coverage of source code that has been tested by test cases, specifically by counting the number of executable statements that have been executed?",
+      "options": [
+        "Decision Coverage",
+        "Statement Coverage",
+        "Boundary Value Analysis",
+        "Condition Coverage"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Statement Coverage is a white-box technique that measures the percentage of executable statements in the source code that have been executed by a test suite. It is the most fundamental coverage type."
+    },
+    {
+      "question": "Which characteristic best describes the testing approach used in a Waterfall development life cycle model?",
+      "options": [
+        "Testing is highly iterative and occurs continuously alongside development",
+        "Testing is typically planned and performed only after the development phase is fully complete",
+        "Testing relies heavily on early stakeholder feedback and user stories",
+        "Testing is organized around sprints and continuous integration"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Testing is typically planned and performed only after the development phase is fully complete is the characteristic that best describes the testing approach in a classic Waterfall model."
+    },
+    {
+      "question": "When software is modified to adapt it to changes in the environment (e.g., a new operating system version or database), what type of maintenance testing is required?",
+      "options": [
+        "Corrective Maintenance Testing",
+        "Perfective Maintenance Testing",
+        "Adaptive Maintenance Testing",
+        "Preventive Maintenance Testing"
+      ],
+      "correct_answer_index": 2,
+      "category": "ISTQB",
+      "explanation": "Adaptive Maintenance Testing is the type of testing required when software is modified to adapt to environmental changes."
+    },
+    {
+      "question": "Which document is the most authoritative source for defining the expected behavior of a system during the acceptance test level?",
+      "options": [
+        "Test Plan",
+        "System Design Specification",
+        "Business Requirements Specification (BRS)",
+        "User Manual"
+      ],
+      "correct_answer_index": 2,
+      "category": "ISTQB",
+      "explanation": "Business Requirements Specification (BRS) or similar document (like the User Requirements Specification) defines what the user needs and expects the system to do. Acceptance Testing is focused on validating the system against the user's needs."
+    },
+    {
+      "question": "Which of the following is the strongest form of structural coverage (white-box) in terms of coverage achieved?",
+      "options": [
+        "Decision Coverage",
+        "Statement Coverage",
+        "Multiple Condition Coverage",
+        "Path Coverage"
+      ],
+      "correct_answer_index": 3,
+      "category": "ISTQB",
+      "explanation": "Path Coverage is the strongest form of structural coverage as it requires all possible paths through the code to be executed."
+    },
+    {
+      "question": "A test manager needs to decide where to focus limited testing resources. Two features have been identified: Feature A has a high likelihood of failure but low impact, while Feature B has a low likelihood of failure but high impact. According to risk-based testing principles, which feature should receive more testing focus?",
+      "options": [
+        "Feature A",
+        "Feature B",
+        "Both features equally",
+        "Neither feature"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "Feature B should receive more testing focus because it has a higher impact, even though it has a lower likelihood of failure."
+    },
+    {
+      "question": "An important aspect of the Test Plan is defining the Exit Criteria. Which of the following is the best example of a quantitative exit criterion?",
+      "options": [
+        "95% of test cases have been executed",
+        "All critical defects have been fixed",
+        "Test coverage meets the defined requirements",
+        "All stakeholders have signed off on the test results"
+      ],
+      "correct_answer_index": 0,
+      "category": "ISTQB",
+      "explanation": "95% of test cases executed is a clear, measurable criterion for test completion."
+    },
+    {
+      "question": "A development team performs a Technical Review on a piece of critical security code. Which role is mandatory for a formal Technical Review, as defined by ISTQB, to ensure objectivity and independence?",
+      "options": [
+        "The Author (Writer of the code)",
+        "The Review Leader (Moderator)",
+        "A Management Representative",
+        "The Scribe (Recorder of defects)"
+      ],
+      "correct_answer_index": 1,
+      "category": "ISTQB",
+      "explanation": "The Review Leader/Moderator is the key role that ensures the review process maintains its formal structure, objectivity, and effectiveness."
     },
     {
       "question": "What distinguishes Continuous Delivery from Continuous Deployment in an automated pipeline?",
@@ -1904,7 +2092,6 @@
       ],
       "correct_answer_index": 2,
       "category": "Automation",
-      "explanation": "Continuous Delivery keeps software releasable at all times with automated quality gates; Continuous Deployment takes the final step of automatically releasing each passed change to production.",
-      "new": true
+      "explanation": "Continuous Delivery keeps software releasable at all times with automated quality gates; Continuous Deployment takes the final step of automatically releasing each passed change to production."
     }
   ]
