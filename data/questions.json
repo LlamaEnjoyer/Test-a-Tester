@@ -313,7 +313,7 @@
     ],
     "correct_answer_index": 3,
     "category": "Selenium",
-    "explanation": "The By class provides mechanisms to locate web elements, like ID, name, or XPath."
+    "explanation": "By.JQUERY_SELECTOR is not a valid locator strategy in Selenium's By class. The valid strategies include ID, NAME, XPATH, CSS_SELECTOR, CLASS_NAME, TAG_NAME, LINK_TEXT, and PARTIAL_LINK_TEXT."
   },
   {
     "question": "In a Behavior-Driven Development (BDD) framework using Gherkin, what is the purpose of the 'Given', 'When', 'Then' keywords?",
@@ -2093,5 +2093,191 @@
       "correct_answer_index": 2,
       "category": "Automation",
       "explanation": "Continuous Delivery keeps software releasable at all times with automated quality gates; Continuous Deployment takes the final step of automatically releasing each passed change to production."
-    }
-  ]
+    },
+    {
+    "question": "Fill in the blank to correctly iterate over both keys and values of the dictionary `my_dict`.",
+    "code_snippet": "my_dict = {'name': 'John', 'age': 30}\nfor key, value in my_dict.______:\n    print(f'{key}: {value}')",
+    "options": [
+      "items()",
+      "values()",
+      "keys()",
+      "__dict__"
+    ],
+    "correct_answer_index": 0,
+    "category": "Python",
+    "explanation": "The `.items()` method returns a view object that displays a list of a dictionary's key-value tuple pairs. This is the standard way to loop through both keys and values simultaneously in Python."
+  },
+  {
+    "question": "Which Selenium command is used to switch the driver's context back to the main page content after operating within an iframe?",
+    "options": [
+      "driver.switch_to.parent_frame()",
+      "driver.switch_to.main_window()",
+      "driver.switch_to.default_content()",
+      "driver.close_frame()"
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "`driver.switch_to.default_content()` switches the focus back to the main document from an iframe or frame. `parent_frame()` only moves up one level, which may not be the main document in cases of nested frames."
+  },
+  {
+    "question": "What is the primary advantage of data-driven testing in an automation framework?",
+    "options": [
+      "It makes test execution significantly faster by default.",
+      "It automatically generates reports in multiple formats.",
+      "It separates test logic from test data, allowing the same test script to be run with multiple datasets to increase coverage.",
+      "It eliminates the need for explicit waits in tests."
+    ],
+    "correct_answer_index": 2,
+    "category": "Automation",
+    "explanation": "Data-driven testing allows you to run a single test case with a large set of input-output data. This makes it easy to verify the application's behavior with numerous values without writing redundant test logic."
+  },
+  {
+    "question": "Fill in the blank to complete the `try...except` block, ensuring that a specific `ValueError` is caught.",
+    "code_snippet": "try:\n    age = int('twenty')\n______ ValueError as e:\n    print(f'Error: {e}')",
+    "options": [
+      "catch",
+      "on",
+      "handle",
+      "except"
+    ],
+    "correct_answer_index": 3,
+    "category": "Python",
+    "explanation": "The `except` keyword is used in Python to define the block of code that handles a specific type of exception raised within the `try` block. `as e` captures the exception instance for further inspection."
+  },
+  {
+    "question": "Complete the code to select the option with the HTML `value` attribute of 'saab' from a dropdown element.",
+    "code_snippet": "from selenium.webdriver.support.ui import Select\n\ndropdown = driver.find_element(By.ID, 'cars')\nselect = Select(dropdown)\nselect.______('saab')",
+    "options": [
+      "select_by_name('saab')",
+      "select_by_value('saab')",
+      "select_by_text('saab')",
+      "select_by_id('saab')"
+    ],
+    "correct_answer_index": 1,
+    "category": "Selenium",
+    "explanation": "The `Select` class in Selenium provides the `select_by_value()` method to specifically target and select an `<option>` element based on its `value` attribute, which is often a stable locator."
+  },
+  {
+    "question": "In test automation, the 'DRY' principle is a best practice that stands for:",
+    "options": [
+      "Don't Run Yesterday's-tests",
+      "Data-driven Reliability Yields-results",
+      "Don't Repeat Yourself",
+      "Do Remember Your-assertions"
+    ],
+    "correct_answer_index": 2,
+    "category": "Automation",
+    "explanation": "The 'Don't Repeat Yourself' (DRY) principle aims to reduce code repetition by abstracting common parts into reusable functions or classes. This makes test suites more maintainable, readable, and less prone to errors."
+  },
+  {
+    "question": "Which code snippet correctly removes the last element from the list `my_list` and stores it in the `last_item` variable?",
+    "code_snippet": "my_list = [10, 20, 30, 40]\nlast_item = my_list.______",
+    "options": [
+      "pop()",
+      "remove(40)",
+      "get(-1)",
+      "last()"
+    ],
+    "correct_answer_index": 0,
+    "category": "Python",
+    "explanation": "The `pop()` method, when called without an index, removes and returns the last item from a list. `remove(40)` would remove the value 40, but it doesn't return the item. `get()` and `last()` are not valid list methods."
+  },
+  {
+    "question": "Which Selenium method should be used to verify if a checkbox element is currently checked?",
+    "code_snippet": "checkbox = driver.find_element(By.ID, 'agree_terms')\nif checkbox.______:\n    print('Checkbox is already selected')",
+    "options": [
+      "is_enabled()",
+      "is_displayed()",
+      "is_selected()",
+      "is_checked()"
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "The `is_selected()` method returns `True` if an element like a checkbox or radio button is selected, and `False` otherwise. It is the standard method for checking the state of such form elements."
+  },
+  {
+    "question": "When is it more appropriate to use an API test instead of a UI test for validating application functionality?",
+    "options": [
+      "When testing the visual layout and CSS styling of a webpage.",
+      "When the test needs to validate end-to-end user workflows exactly as a user would perform them.",
+      "When you need to verify business logic on the server quickly and reliably, bypassing the slower and more brittle UI layer.",
+      "When the application has no backend and runs entirely in the browser."
+    ],
+    "correct_answer_index": 2,
+    "category": "Automation",
+    "explanation": "API tests are significantly faster and more stable than UI tests because they interact directly with the application's business logic layer. They are ideal for validating data processing, calculations, and server responses without the overhead of rendering a UI."
+  },
+  {
+    "question": "In test automation, what is the primary purpose of an 'integration test'?",
+    "options": [
+      "To test individual functions or methods in isolation.",
+      "To verify that different modules or services work together as expected.",
+      "To test the application's performance under heavy load.",
+      "To validate the user interface and user experience."
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "Integration testing focuses on verifying the interactions and data flow between different components, services, or systems to ensure they function correctly when combined."
+  },
+  {
+    "question": "What is the output of the following Python code snippet?",
+    "code_snippet": "d = {'a': 1, 'b': 2}\nprint(d.get('c', 3))",
+    "options": [
+      "1",
+      "None",
+      "3",
+      "KeyError"
+    ],
+    "correct_answer_index": 2,
+    "category": "Python",
+    "explanation": "The `get()` method for dictionaries attempts to retrieve the value for a given key. If the key is not found, it returns the default value provided as the second argument. Here, 'c' is not in the dictionary, so it returns the default value of 3."
+  },
+  {
+    "question": "Which of the following best describes the goal of Continuous Integration (CI) in an automation pipeline?",
+    "options": [
+      "To automatically deploy the application to production after every code change.",
+      "To frequently merge and automatically test code changes from multiple developers to detect integration issues early.",
+      "To manually test the application before each release.",
+      "To write test scripts for all new features."
+    ],
+    "correct_answer_index": 1,
+    "category": "Automation",
+    "explanation": "Continuous Integration is the practice of automating the integration of code changes from multiple contributors into a single software project. The primary goal is to run automated builds and tests to catch integration problems as quickly as possible."
+  },
+   {
+    "question": "What is the correct way to define a function in Python that can accept any number of keyword arguments?",
+    "options": [
+      "def my_func(*args):",
+      "def my_func(kwargs):",
+      "def my_func(**kwargs):",
+      "def my_func(args[]):"
+    ],
+    "correct_answer_index": 2,
+    "category": "Python",
+    "explanation": "The `**kwargs` syntax in a function definition collects any keyword arguments passed to the function into a dictionary named 'kwargs'. This allows for flexible function design where the number and names of arguments are not known beforehand."
+  },
+  {
+    "question": "What is the most effective way to handle a test that requires a unique username for each run?",
+    "options": [
+      "Hardcoding a list of usernames and iterating through them.",
+      "Manually updating the username in the script before each execution.",
+      "Using a library or function to dynamically generate a random username (e.g., with a timestamp or UUID).",
+      "Reading the username from a user input prompt at the start of the test."
+    ],
+    "correct_answer_index": 2,
+    "category": "Automation",
+    "explanation": "Dynamically generating a unique username for each test run ensures that tests are independent and repeatable without conflicts from previous runs. Hardcoding is not scalable, and manual intervention defeats the purpose of automation."
+  },
+  {
+    "question": "How do you clear all cookies for the current domain in Selenium?",
+    "options": [
+      "driver.cookies.clear()",
+      "driver.manage().delete_all_cookies()",
+      "driver.delete_all_cookies()",
+      "driver.clear_cookies()"
+    ],
+    "correct_answer_index": 2,
+    "category": "Selenium",
+    "explanation": "The `driver.delete_all_cookies()` method removes all cookies associated with the current domain, which is useful for resetting the session state before or after a test."
+  }
+]
