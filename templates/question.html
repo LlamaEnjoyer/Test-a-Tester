@@ -18,7 +18,7 @@
     <pre class="code-snippet"><code>{{ question_data.code_snippet }}</code></pre>
     {% endif %}
 
-    <form method="post" id="quiz-form">
+    <form method="post" action="{{ url_for('submit_answer') }}" id="quiz-form">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <ul>
             {% for option in question_data.options %}
