@@ -1,7 +1,7 @@
-import json
 import os
 import secrets
 from datetime import timedelta
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 from flask import Flask, redirect, render_template, request, url_for
@@ -9,6 +9,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import CSRFProtect
 
+from question_validator import QuestionValidationError, validate_questions_file
 from services import (
     build_review_data,
     calculate_score_percentage,
@@ -86,26 +87,44 @@ DEFAULT_TIME_LIMIT_MINUTES = 10
 
 
 def load_questions() -> List[Dict[str, Any]]:
-    """Load questions from the JSON file."""
+    """
+    Load and validate questions from the JSON file.
+
+    Returns:
+        List of validated question dictionaries
+
+    Raises:
+        FileNotFoundError: If questions file is not found
+        QuestionValidationError: If questions fail validation
+        ValueError: For other data format errors
+    """
     # Get the directory where app.py is located
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    questions_file = os.path.join(base_dir, "data", "questions.json")
+    base_dir = Path(__file__).parent
+    questions_file = base_dir / "data" / "questions.json"
+    schema_file = base_dir / "data" / "questions_schema.json"
 
-    # Check if file exists
-    if not os.path.exists(questions_file):
-        raise FileNotFoundError(f"Questions file not found: {questions_file}")
-
+    # Validate and load questions with schema validation
     try:
-        with open(questions_file, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        validated_questions = validate_questions_file(
+            questions_file,
+            schema_file,
+            strict=True,  # Enable strict validation (answer indices, unique options)
+        )
 
-            # Validate that we got a list
-            if not isinstance(data, list) or len(data) == 0:
-                raise ValueError("Questions file must contain a non-empty JSON array")
+        # Additional basic validation
+        if not isinstance(validated_questions, list) or len(validated_questions) == 0:
+            raise ValueError("Questions file must contain a non-empty JSON array")
 
-            return data
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Invalid JSON in questions file: {e}") from e
+        print(f"✓ Successfully loaded and validated {len(validated_questions)} questions")
+        return validated_questions
+
+    except QuestionValidationError as e:
+        print("=" * 80)
+        print("ERROR: Questions data validation failed!")
+        print("=" * 80)
+        print(str(e))
+        print("=" * 80)
+        raise
 
 
 def get_unique_categories(questions_list: List[Dict[str, Any]]) -> List[str]:
