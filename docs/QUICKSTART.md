@@ -114,7 +114,7 @@ pip install -r requirements.txt
 
 ## For More Details
 
-See `CONFIGURATION.md` for complete documentation.
+See [CONFIGURATION.md](CONFIGURATION.md) for complete documentation.
 
 ## Support
 
@@ -122,4 +122,4 @@ If issues persist:
 1. Check `logs/app.log` for errors
 2. Verify `.env` file is in project root
 3. Ensure all dependencies installed
-4. Review `CONFIGURATION.md` troubleshooting section
+4. Review [CONFIGURATION.md](CONFIGURATION.md) troubleshooting section

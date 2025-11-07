@@ -85,9 +85,17 @@ Test-a-Tester/
 │       ├── theme.js           # Theme toggle functionality
 │       ├── start.js           # Start page logic
 │       └── question.js        # Question page timer
-├── README.md                  # This file
-├── VALIDATION.md              # Data validation documentation
-└── LINTING.md                 # Code quality documentation
+├── scripts/                   # Utility scripts for development
+│   ├── format.bat/sh          # Code formatting scripts
+│   ├── lint.bat/sh            # Linting scripts
+│   ├── check.bat/sh           # Format checking scripts
+│   └── all.bat/sh             # Run all checks
+├── docs/                      # Documentation
+│   ├── CONFIGURATION.md       # Configuration guide
+│   ├── VALIDATION.md          # Data validation documentation
+│   ├── LINTING.md             # Code quality documentation
+│   └── QUICKSTART.md          # Quick setup guide
+└── README.md                  # This file
 ```
 
 ## Configuration
@@ -107,7 +115,7 @@ This validates:
 - No duplicate options
 - String length constraints
 
-See [VALIDATION.md](VALIDATION.md) for detailed documentation.
+See [docs/VALIDATION.md](docs/VALIDATION.md) for detailed documentation.
 
 ### Adding Questions
 
@@ -175,7 +183,8 @@ Contributions are welcome! To contribute:
 4. Run validation and linting:
    ```bash
    python validate_questions.py  # If modifying questions
-   python check.sh               # Run all checks
+   ./scripts/check.sh            # Run all checks (Linux/Mac/Git Bash)
+   scripts\check.bat             # Run all checks (Windows)
    ```
 5. Commit your changes (`git commit -m 'Add NewFeature'`)
 6. Push to the branch (`git push origin feature/NewFeature`)
@@ -190,7 +199,9 @@ This project uses:
 - **MyPy** for type checking
 - **Pylint** for additional checks
 
-Run all checks: `./check.sh` or `check.bat`
+Run all checks: `./scripts/check.sh` or `scripts\check.bat`
+
+See [docs/LINTING.md](docs/LINTING.md) for detailed documentation.
 
 ## License
 

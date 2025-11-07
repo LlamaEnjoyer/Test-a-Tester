@@ -4,36 +4,36 @@
 
 | Script | Description |
 |--------|-------------|
-| `format.bat` | Format code with isort and black |
-| `lint.bat` | Run flake8 and mypy linters |
-| `check.bat` | Check formatting without making changes |
-| `clean.bat` | Remove Python cache files |
-| `all.bat` | Format + lint everything |
+| `scripts\format.bat` | Format code with isort and black |
+| `scripts\lint.bat` | Run flake8 and mypy linters |
+| `scripts\check.bat` | Check formatting without making changes |
+| `scripts\clean.bat` | Remove Python cache files |
+| `scripts\all.bat` | Format + lint everything |
 
 **Usage:**
 ```cmd
-all.bat
+scripts\all.bat
 ```
 
 ## Git Bash / Linux / macOS
 
 | Script | Description |
 |--------|-------------|
-| `format.sh` | Format code with isort and black |
-| `lint.sh` | Run flake8 and mypy linters |
-| `check.sh` | Check formatting without making changes |
-| `all.sh` | Format + lint everything |
+| `scripts/format.sh` | Format code with isort and black |
+| `scripts/lint.sh` | Run flake8 and mypy linters |
+| `scripts/check.sh` | Check formatting without making changes |
+| `scripts/all.sh` | Format + lint everything |
 
 **Usage:**
 ```bash
-./all.sh
+./scripts/all.sh
 ```
 
 ## Recommended Workflow
 
 Before committing code:
-1. **Windows:** Run `all.bat`
-2. **Bash:** Run `./all.sh`
+1. **Windows:** Run `scripts\all.bat`
+2. **Bash:** Run `./scripts/all.sh`
 
 This will:
 - ✅ Format your code with Black
@@ -63,4 +63,4 @@ python -m isort --check-only .
 
 The `Makefile` is included but requires GNU Make which is not typically available on Windows by default. Use the `.bat` or `.sh` scripts instead for better cross-platform compatibility.
 
-For full documentation, see `LINTING.md`.
+For full documentation, see [LINTING.md](LINTING.md).

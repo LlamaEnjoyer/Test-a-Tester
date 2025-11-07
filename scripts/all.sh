@@ -1,12 +1,15 @@
 #!/bin/bash
 # Format and lint all code
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 echo "========================================"
 echo "  Format and Lint All Code"
 echo "========================================"
 echo ""
 
-./format.sh
+"$SCRIPT_DIR/format.sh"
 if [ $? -ne 0 ]; then
     echo ""
     echo "❌ Formatting failed"
@@ -17,7 +20,7 @@ echo ""
 echo "========================================"
 echo ""
 
-./lint.sh
+"$SCRIPT_DIR/lint.sh"
 
 echo ""
 echo "========================================"

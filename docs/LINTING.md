@@ -26,35 +26,35 @@ This project uses several tools to maintain code quality and consistency.
 
 ```cmd
 # Format code automatically
-format.bat
+scripts\format.bat
 
 # Run all linters
-lint.bat
+scripts\lint.bat
 
 # Check formatting without changes
-check.bat
+scripts\check.bat
 
 # Clean cache files
-clean.bat
+scripts\clean.bat
 
 # Format and lint (recommended before commit)
-all.bat
+scripts\all.bat
 ```
 
 ### Quick Commands (Git Bash / Linux - Shell Scripts)
 
 ```bash
 # Format code automatically
-./format.sh
+./scripts/format.sh
 
 # Run all linters
-./lint.sh
+./scripts/lint.sh
 
 # Check formatting without changes
-./check.sh
+./scripts/check.sh
 
 # Format and lint (recommended before commit)
-./all.sh
+./scripts/all.sh
 ```
 
 ### Manual Commands
@@ -80,12 +80,12 @@ python -m pylint app.py
 
 **Windows (Command Prompt):**
 ```cmd
-check.bat
+scripts\check.bat
 ```
 
 **Git Bash / Linux:**
 ```bash
-./check.sh
+./scripts/check.sh
 ```
 
 **Or manually:**
