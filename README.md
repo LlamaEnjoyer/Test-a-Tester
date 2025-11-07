@@ -8,7 +8,8 @@ Test-a-Tester is an educational quiz application designed for QA engineers, test
 
 ## Features
 
-- 55+ questions covering Selenium WebDriver, Python, and test automation best practices
+- 185+ questions covering Selenium WebDriver, Python, ISTQB concepts, and test automation best practices
+- **Comprehensive data validation** with JSON Schema ensuring data integrity at load time
 - Customizable tests with category selection, configurable question count, and time limits (1-120 minutes)
 - Optional answer shuffling to randomize option order for each question
 - Real-time countdown timer with automatic submission
@@ -16,6 +17,7 @@ Test-a-Tester is an educational quiz application designed for QA engineers, test
 - Comprehensive review of incorrect answers with explanations
 - Code snippet examples for practical learning
 - Dark/Light theme toggle with system preference detection and localStorage persistence
+- Robust input validation and security features (CSRF protection, rate limiting)
 
 ## Getting Started
 
@@ -42,6 +44,8 @@ Test-a-Tester is an educational quiz application designed for QA engineers, test
    python app.py
    ```
 
+   The app will automatically validate all questions on startup. If validation fails, detailed error messages will be displayed.
+
 4. Navigate to `http://127.0.0.1:5000/` in your browser
 
 ## Usage
@@ -56,70 +60,201 @@ Test-a-Tester is an educational quiz application designed for QA engineers, test
 
 ```
 Test-a-Tester/
-├── app.py                 # Main Flask application
-├── requirements.txt       # Python dependencies
+├── app.py                     # Main Flask application
+├── services.py                # Business logic services
+├── session_helpers.py         # Session management utilities
+├── validators.py              # Input validation functions
+├── question_validator.py      # Questions data validation with JSON Schema
+├── validate_questions.py      # Standalone validation script
+├── requirements.txt           # Python dependencies
 ├── data/
-│   └── questions.json     # Question bank with categories
+│   ├── questions.json         # Question bank (validated)
+│   └── questions_schema.json  # JSON Schema for questions
+├── tests/                     # Test files
+│   ├── test_services.py       # Tests for business logic
+│   ├── test_validators.py     # Tests for validation functions
+│   ├── test_session_helpers.py # Tests for session management
+│   ├── test_clock_skew.py     # Tests for clock skew detection
+│   ├── test_validation.py     # Integration tests for question validation
+│   └── README.md              # Test documentation
 ├── templates/
-│   ├── start.html         # Landing page with test configuration
-│   ├── question.html      # Question display with timer
-│   ├── score.html         # Results page
-│   └── review.html        # Wrong answer review page
+│   ├── base.html              # Base template with theme support
+│   ├── start.html             # Landing page with test configuration
+│   ├── question.html          # Question display with timer
+│   ├── score.html             # Results page
+│   ├── review.html            # Wrong answer review page
+│   └── error.html             # Error page
 ├── static/
 │   ├── css/
-│   │   └── style.css      # Application styling
+│   │   └── style.css          # Application styling with dark/light themes
 │   └── js/
-│       └── theme.js       # Theme toggle functionality
-└── README.md
+│       ├── theme.js           # Theme toggle functionality
+│       ├── start.js           # Start page logic
+│       └── question.js        # Question page timer
+├── scripts/                   # Utility scripts for development
+│   ├── format.bat/sh          # Code formatting scripts
+│   ├── lint.bat/sh            # Linting scripts
+│   ├── check.bat/sh           # Format checking scripts
+│   ├── test.bat/sh            # Test runner scripts
+│   └── all.bat/sh             # Run all checks (format, lint, test)
+├── docs/                      # Documentation
+│   ├── CONFIGURATION.md       # Configuration guide
+│   ├── VALIDATION.md          # Data validation documentation
+│   ├── LINTING.md             # Code quality documentation
+│   └── QUICKSTART.md          # Quick setup guide
+└── README.md                  # This file
 ```
 
 ## Configuration
 
+### Validating Questions
+
+Before adding or modifying questions, run the validation script:
+
+**Windows:**
+```cmd
+scripts\validate-data.bat
+```
+
+**Git Bash / Linux / macOS:**
+```bash
+./scripts/validate-data.sh
+```
+
+**Or directly:**
+```bash
+python validate_questions.py
+```
+
+This validates:
+- JSON structure against schema
+- All required fields present
+- Answer indices within bounds
+- No duplicate options
+- String length constraints
+
+See [docs/VALIDATION.md](docs/VALIDATION.md) for detailed documentation.
+
 ### Adding Questions
 
-Questions are stored in `data/questions.json`. Each question follows this structure:
+Questions are stored in `data/questions.json` and must conform to the schema in `data/questions_schema.json`.
 
+**Required fields**:
 ```json
 {
-  "question": "Question text here",
-  "code_snippet": "Optional code example",
-  "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+  "question": "Question text (10-1000 chars)",
+  "options": ["Option 1", "Option 2", "Option 3"],
   "correct_answer_index": 0,
-  "category": "Python|Selenium|Automation",
-  "explanation": "Explanation of correct answer"
+  "category": "Python|Selenium|Automation|ISTQB",
+  "explanation": "Explanation of correct answer (10-2000 chars)"
 }
 ```
 
-### Security
-
-For production deployment, set environment variables for configuration:
-
-```bash
-export SECRET_KEY='your_very_secret_random_key'
-export FLASK_DEBUG='false'
+**Optional fields**:
+```json
+{
+  "code_snippet": "Optional code example",
+  "new": true
+}
 ```
 
-The application automatically uses secure defaults:
-- `SECRET_KEY`: Falls back to `os.urandom(24)` if not set
-- `FLASK_DEBUG`: Defaults to `False` for production safety
+**Important**: 
+- `correct_answer_index` must be within `options` array bounds (0-based)
+- All options must be unique within a question
+- Always validate after editing: `python validate_questions.py`
+
+### Security
+
+For production deployment, set environment variables:
+
+```bash
+export SECRET_KEY='your_very_secret_random_key_here'
+export FLASK_DEBUG='false'
+export SESSION_COOKIE_SECURE='true'  # For HTTPS deployments
+```
+
+Security features:
+- CSRF protection on all forms
+- Rate limiting (200/day, 50/hour)
+- Secure session cookies (HttpOnly, SameSite)
+- Input validation and sanitization
+- Questions data validation at startup
 
 ## Technologies
 
 - **Backend**: Flask 3.0.0 (Python web framework)
+- **Data Validation**: JSON Schema (jsonschema 4.23.0)
+- **Security**: Flask-WTF (CSRF), Flask-Limiter (rate limiting)
 - **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Data Storage**: JSON for question bank
+- **Data Storage**: JSON with schema validation
 - **State Management**: Flask sessions with secure cookie-based storage
 - **Theming**: CSS custom properties with localStorage and system preference detection
+- **Code Quality**: Black, Flake8, MyPy, Pylint, isort
 
 ## Contributing
 
-Contributions are welcome. To contribute:
+Contributions are welcome! To contribute:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/NewFeature`)
-3. Commit your changes (`git commit -m 'Add NewFeature'`)
-4. Push to the branch (`git push origin feature/NewFeature`)
-5. Open a Pull Request
+3. Make your changes
+4. Run validation and linting:
+   ```bash
+   # Windows
+   scripts\validate-data.bat  # If modifying questions
+   scripts\all.bat            # Run all checks (format, lint, test)
+   
+   # Git Bash / Linux / macOS
+   ./scripts/validate-data.sh # If modifying questions
+   ./scripts/all.sh           # Run all checks (format, lint, test)
+   ```
+5. Commit your changes (`git commit -m 'Add NewFeature'`)
+6. Push to the branch (`git push origin feature/NewFeature`)
+7. Open a Pull Request
+
+### Code Quality
+
+This project uses:
+- **Black** for code formatting
+- **isort** for import sorting
+- **Flake8** for linting
+- **MyPy** for type checking
+- **Pylint** for additional checks
+
+Run all checks:
+```bash
+# Windows
+scripts\all.bat
+
+# Git Bash / Linux / macOS
+./scripts/all.sh
+```
+
+This includes formatting, linting, and testing.
+
+See [docs/LINTING.md](docs/LINTING.md) and [docs/SCRIPTS.md](docs/SCRIPTS.md) for detailed documentation.
+
+### Running Tests
+
+Run the test suite to verify changes:
+
+```bash
+# Windows
+scripts\test.bat
+
+# Git Bash / Linux / macOS
+./scripts/test.sh
+
+# Or use Makefile
+make test
+
+# Run individual test files
+python tests/test_services.py
+python tests/test_validators.py
+python tests/test_session_helpers.py
+```
+
+See [tests/README.md](tests/README.md) for detailed test documentation.
 
 ## License
 

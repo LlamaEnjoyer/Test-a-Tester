@@ -1,0 +1,62 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Quiz Questions Schema",
+    "description": "Schema for validating quiz question data structure",
+    "type": "array",
+    "minItems": 1,
+    "items": {
+        "type": "object",
+        "required": [
+            "question",
+            "options",
+            "correct_answer_index",
+            "category",
+            "explanation"
+        ],
+        "properties": {
+            "question": {
+                "type": "string",
+                "minLength": 10,
+                "maxLength": 1000,
+                "description": "The question text"
+            },
+            "code_snippet": {
+                "type": "string",
+                "description": "Optional code snippet to display with the question"
+            },
+            "options": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 10,
+                "description": "List of answer options",
+                "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                }
+            },
+            "correct_answer_index": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Index of the correct answer in the options array (0-based)"
+            },
+            "category": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100,
+                "description": "Question category (e.g., Python, Selenium, Automation, ISTQB)"
+            },
+            "explanation": {
+                "type": "string",
+                "minLength": 10,
+                "maxLength": 2000,
+                "description": "Explanation of the correct answer"
+            },
+            "new": {
+                "type": "boolean",
+                "description": "Optional flag to mark new questions"
+            }
+        },
+        "additionalProperties": false
+    }
+}
