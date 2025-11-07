@@ -4,6 +4,7 @@ import random
 import secrets
 import time
 from datetime import timedelta
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 from flask import Flask, redirect, render_template, request, session, url_for
 from flask_limiter import Limiter
@@ -16,7 +17,7 @@ app = Flask(__name__)
 # CRITICAL SECURITY FIX: Use a persistent secret key
 # The secret key MUST be persistent across server restarts to maintain sessions
 # Set SECRET_KEY environment variable or this will generate one and warn you
-secret_key = os.environ.get("SECRET_KEY")
+secret_key: Optional[str] = os.environ.get("SECRET_KEY")
 if not secret_key:
     # Generate a cryptographically secure random key
     secret_key = secrets.token_hex(32)
@@ -54,7 +55,7 @@ MIN_TIME_LIMIT_MINUTES = 1
 DEFAULT_TIME_LIMIT_MINUTES = 10
 
 
-def load_questions():
+def load_questions() -> List[Dict[str, Any]]:
     """Load questions from the JSON file."""
     # Get the directory where app.py is located
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -77,31 +78,31 @@ def load_questions():
         raise ValueError(f"Invalid JSON in questions file: {e}") from e
 
 
-def get_unique_categories(questions_list):
+def get_unique_categories(questions_list: List[Dict[str, Any]]) -> List[str]:
     """Extract unique categories from questions."""
-    categories = set()
+    categories: Set[str] = set()
     for question in questions_list:
         if "category" in question:
             categories.add(question["category"])
     return sorted(list(categories))
 
 
-def get_category_counts(questions_list):
+def get_category_counts(questions_list: List[Dict[str, Any]]) -> Dict[str, int]:
     """Count questions per category."""
-    counts = {}
+    counts: Dict[str, int] = {}
     for question in questions_list:
         category = question.get("category", "Unknown")
         counts[category] = counts.get(category, 0) + 1
     return counts
 
 
-def validate_time_remaining():
+def validate_time_remaining() -> Tuple[bool, int]:
     """
     Validate server-side timer to prevent client-side manipulation.
     Returns (is_valid, remaining_time) tuple.
     """
-    start_time = session.get("start_time")
-    time_limit = session.get("time_limit", 600)
+    start_time: Optional[float] = session.get("start_time")
+    time_limit: int = session.get("time_limit", 600)
 
     if start_time is None:
         return False, 0
@@ -116,7 +117,11 @@ def validate_time_remaining():
     return True, remaining_time
 
 
-def apply_shuffle_mapping(question, question_index, shuffle_mappings):
+def apply_shuffle_mapping(
+    question: Dict[str, Any],
+    question_index: int,
+    shuffle_mappings: Optional[Dict[int, Dict[str, Any]]],
+) -> Dict[str, Any]:
     """
     Apply shuffle mapping to a question's options if shuffling is enabled.
 
@@ -129,15 +134,20 @@ def apply_shuffle_mapping(question, question_index, shuffle_mappings):
         The modified question dictionary
     """
     if shuffle_mappings and question_index in shuffle_mappings:
-        mapping = shuffle_mappings[question_index]
-        shuffled_order = mapping["order"]
-        original_options = question["options"]
+        mapping: Dict[str, Any] = shuffle_mappings[question_index]
+        shuffled_order: List[int] = mapping["order"]
+        original_options: List[str] = question["options"]
         question["options"] = [original_options[i] for i in shuffled_order]
         question["correct_answer_index"] = mapping["correct_index"]
     return question
 
 
-def validate_test_configuration(selected_categories, num_questions, time_limit, filtered_questions):
+def validate_test_configuration(
+    selected_categories: List[str],
+    num_questions: int,
+    time_limit: int,
+    filtered_questions: List[Dict[str, Any]],
+) -> Tuple[bool, Optional[str]]:
     """
     Validate user test configuration inputs.
 
@@ -171,17 +181,17 @@ def validate_test_configuration(selected_categories, num_questions, time_limit, 
     return True, None
 
 
-questions = load_questions()
+questions: List[Dict[str, Any]] = load_questions()
 
 
 @app.route("/")
 @limiter.limit("30 per minute")
-def start():
+def start() -> str:
     """
     This is the landing page that displays the start screen.
     """
-    categories = get_unique_categories(questions)
-    category_counts = get_category_counts(questions)
+    categories: List[str] = get_unique_categories(questions)
+    category_counts: Dict[str, int] = get_category_counts(questions)
     return render_template(
         "start.html",
         total_questions=len(questions),
@@ -192,13 +202,13 @@ def start():
 
 @app.route("/start-test", methods=["POST"])
 @limiter.limit("10 per minute")
-def start_test():
+def start_test() -> Any:
     """
     This route initializes the test state in the session
     and redirects to the first question.
     """
     # BACKEND VALIDATION: Get and validate selected categories
-    selected_categories = request.form.getlist("categories")
+    selected_categories: List[str] = request.form.getlist("categories")
 
     # Validate categories exist and are non-empty
     if not selected_categories:
@@ -211,7 +221,7 @@ def start_test():
         )
 
     # Validate all selected categories are valid
-    valid_categories = get_unique_categories(questions)
+    valid_categories: List[str] = get_unique_categories(questions)
     for category in selected_categories:
         if category not in valid_categories:
             app.logger.warning("Invalid category submitted: %s", category)
@@ -223,7 +233,9 @@ def start_test():
             )
 
     # Filter questions by selected categories
-    filtered_questions = [q for q in questions if q.get("category") in selected_categories]
+    filtered_questions: List[Dict[str, Any]] = [
+        q for q in questions if q.get("category") in selected_categories
+    ]
 
     # If no questions match the selected categories, reject the request
     if not filtered_questions:
@@ -238,7 +250,7 @@ def start_test():
         )
 
     # BACKEND VALIDATION: Get and validate number of questions
-    num_questions = request.form.get("num_questions", type=int)
+    num_questions: Optional[int] = request.form.get("num_questions", type=int)
 
     # Validate num_questions is a positive integer
     if num_questions is None or not isinstance(num_questions, int):
@@ -277,7 +289,7 @@ def start_test():
         )
 
     # BACKEND VALIDATION: Get and validate time limit
-    time_limit = request.form.get("time_limit", type=int)
+    time_limit: Optional[int] = request.form.get("time_limit", type=int)
 
     if time_limit is None or not isinstance(time_limit, int):
         app.logger.warning("Invalid time_limit format")
@@ -317,7 +329,7 @@ def start_test():
     time_limit = max(MIN_TIME_LIMIT_MINUTES, min(time_limit, MAX_TIME_LIMIT_MINUTES))
 
     # BACKEND VALIDATION: Validate shuffle_answers is a boolean value
-    shuffle_answers_str = request.form.get("shuffle_answers", "false").lower()
+    shuffle_answers_str: str = request.form.get("shuffle_answers", "false").lower()
     if shuffle_answers_str not in ["true", "false"]:
         app.logger.warning("Invalid shuffle_answers value: %s", shuffle_answers_str)
         return (
@@ -325,26 +337,26 @@ def start_test():
             400,
         )
 
-    shuffle_answers = shuffle_answers_str == "true"
+    shuffle_answers: bool = shuffle_answers_str == "true"
 
     # Randomly select questions from the filtered pool
-    selected_questions = random.sample(filtered_questions, num_questions)
+    selected_questions: List[Dict[str, Any]] = random.sample(filtered_questions, num_questions)
 
     # Store only the indices of selected questions to reduce session size
-    selected_indices = [questions.index(q) for q in selected_questions]
+    selected_indices: List[int] = [questions.index(q) for q in selected_questions]
 
     # If shuffle is enabled, create a mapping for answer shuffling
     if shuffle_answers:
-        shuffle_mappings = {}
+        shuffle_mappings: Dict[int, Dict[str, Any]] = {}
         for idx in selected_indices:
-            question = questions[idx]
-            num_options = len(question["options"])
+            question: Dict[str, Any] = questions[idx]
+            num_options: int = len(question["options"])
             # Create a shuffled order
-            shuffled_indices = list(range(num_options))
+            shuffled_indices: List[int] = list(range(num_options))
             random.shuffle(shuffled_indices)
             # Find where the correct answer ended up
-            correct_answer_index = question["correct_answer_index"]
-            new_correct_index = shuffled_indices.index(correct_answer_index)
+            correct_answer_index: int = question["correct_answer_index"]
+            new_correct_index: int = shuffled_indices.index(correct_answer_index)
             shuffle_mappings[idx] = {
                 "order": shuffled_indices,
                 "correct_index": new_correct_index,
@@ -366,21 +378,23 @@ def start_test():
 
 @app.route("/question", methods=["GET", "POST"])
 @limiter.limit("60 per minute")
-def show_question():
+def show_question() -> Any:
     """
     This route handles both displaying the current question (GET) and
     checking the submitted answer (POST).
     """
     # SERVER-SIDE TIMER VALIDATION - prevents client-side timer manipulation
+    time_valid: bool
+    remaining_time: int
     time_valid, remaining_time = validate_time_remaining()
     if not time_valid:
         # Time expired - redirect to score
         return redirect(url_for("show_score"))
 
     # BACKEND VALIDATION: Validate session data integrity
-    q_index = session.get("current_question_index")
-    selected_indices = session.get("selected_question_indices")
-    shuffle_mappings = session.get("shuffle_mappings")
+    q_index: Optional[int] = session.get("current_question_index")
+    selected_indices: Optional[List[int]] = session.get("selected_question_indices")
+    shuffle_mappings: Optional[Dict[int, Dict[str, Any]]] = session.get("shuffle_mappings")
 
     # Validate session contains required data
     if q_index is None:
@@ -426,7 +440,7 @@ def show_question():
         return redirect(url_for("show_score"))
 
     # BACKEND VALIDATION: Validate the selected question index is valid
-    current_question_index = selected_indices[q_index]
+    current_question_index: int = selected_indices[q_index]
 
     if (
         not isinstance(current_question_index, int)
@@ -441,7 +455,7 @@ def show_question():
             400,
         )
 
-    current_question = questions[current_question_index].copy()
+    current_question: Dict[str, Any] = questions[current_question_index].copy()
 
     # Apply shuffling if enabled using helper function
     current_question = apply_shuffle_mapping(
@@ -455,9 +469,10 @@ def show_question():
             return redirect(url_for("show_score"))
 
         # BACKEND VALIDATION: User has submitted an answer - validate it thoroughly
-        user_answer = request.form.get("option")
+        user_answer: Optional[str] = request.form.get("option")
 
         # Determine the correct answer index (considering shuffle)
+        correct_answer_index: int
         if shuffle_mappings and current_question_index in shuffle_mappings:
             correct_answer_index = shuffle_mappings[current_question_index]["correct_index"]
             # BACKEND VALIDATION: Validate shuffle mapping integrity
@@ -473,7 +488,7 @@ def show_question():
             correct_answer_index = questions[current_question_index]["correct_answer_index"]
 
         # BACKEND VALIDATION: Validate correct_answer_index is within bounds
-        num_options = len(current_question.get("options", []))
+        num_options: int = len(current_question.get("options", []))
         if (
             not isinstance(correct_answer_index, int)
             or correct_answer_index < 0
@@ -494,7 +509,7 @@ def show_question():
         # Validate that an answer was actually provided
         if user_answer is None or user_answer == "":
             # No answer selected - treat as wrong
-            wrong_answers = session.get("wrong_answers", [])
+            wrong_answers: List[Dict[str, Any]] = session.get("wrong_answers", [])
             wrong_answers.append(
                 {
                     "question_index": current_question_index,
@@ -505,12 +520,13 @@ def show_question():
             session["wrong_answers"] = wrong_answers
         else:
             # BACKEND VALIDATION: Validate user_answer is a valid integer
+            user_answer_int: int
             try:
                 user_answer_int = int(user_answer)
             except (ValueError, TypeError):
                 app.logger.warning("Invalid answer format submitted: %s", user_answer)
                 # Invalid answer format - treat as wrong
-                wrong_answers = session.get("wrong_answers", [])
+                wrong_answers: List[Dict[str, Any]] = session.get("wrong_answers", [])
                 wrong_answers.append(
                     {
                         "question_index": current_question_index,
@@ -526,7 +542,7 @@ def show_question():
                         "Answer index out of range: %s (max: %s)", user_answer_int, num_options - 1
                     )
                     # Out of range answer - treat as wrong
-                    wrong_answers = session.get("wrong_answers", [])
+                    wrong_answers: List[Dict[str, Any]] = session.get("wrong_answers", [])
                     wrong_answers.append(
                         {
                             "question_index": current_question_index,
@@ -541,7 +557,7 @@ def show_question():
                         session["score"] = session.get("score", 0) + 1
                     else:
                         # Store wrong answer details for review
-                        wrong_answers = session.get("wrong_answers", [])
+                        wrong_answers: List[Dict[str, Any]] = session.get("wrong_answers", [])
                         wrong_answers.append(
                             {
                                 "question_index": current_question_index,
@@ -568,12 +584,12 @@ def show_question():
 
 @app.route("/score")
 @limiter.limit("30 per minute")
-def show_score():
+def show_score() -> str:
     """Displays the final score to the user."""
     # BACKEND VALIDATION: Validate session data
-    score = session.get("score", 0)
-    selected_indices = session.get("selected_question_indices", [])
-    wrong_answers = session.get("wrong_answers", [])
+    score: int = session.get("score", 0)
+    selected_indices: List[int] = session.get("selected_question_indices", [])
+    wrong_answers: List[Dict[str, Any]] = session.get("wrong_answers", [])
 
     # Validate score is a non-negative integer
     if not isinstance(score, int) or score < 0:
@@ -586,7 +602,7 @@ def show_score():
         selected_indices = []
 
     # Calculate total, ensuring it's at least 1 to avoid division by zero
-    total = len(selected_indices) if selected_indices else 1
+    total: int = len(selected_indices) if selected_indices else 1
 
     # Validate score doesn't exceed total
     if score > total:
@@ -594,10 +610,10 @@ def show_score():
         score = total
 
     # Calculate percentage
-    percent = int((score / total) * 100) if total > 0 else 0
+    percent: int = int((score / total) * 100) if total > 0 else 0
 
     # Validate wrong_answers is a list
-    has_wrong_answers = isinstance(wrong_answers, list) and len(wrong_answers) > 0
+    has_wrong_answers: bool = isinstance(wrong_answers, list) and len(wrong_answers) > 0
 
     return render_template(
         "score.html",
@@ -610,9 +626,9 @@ def show_score():
 
 @app.route("/review")
 @limiter.limit("30 per minute")
-def review_wrong_answers():
+def review_wrong_answers() -> Any:
     """Display all wrong answers for review."""
-    wrong_answers = session.get("wrong_answers", [])
+    wrong_answers: List[Dict[str, Any]] = session.get("wrong_answers", [])
 
     # BACKEND VALIDATION: Ensure wrong_answers is a list
     if not isinstance(wrong_answers, list):
@@ -622,17 +638,17 @@ def review_wrong_answers():
     if not wrong_answers:
         return redirect(url_for("show_score"))
 
-    shuffle_mappings = session.get("shuffle_mappings")
+    shuffle_mappings: Optional[Dict[int, Dict[str, Any]]] = session.get("shuffle_mappings")
 
     # Build a list of wrong answer details
-    review_data = []
+    review_data: List[Dict[str, Any]] = []
     for wrong in wrong_answers:
         # BACKEND VALIDATION: Validate each wrong answer entry
         if not isinstance(wrong, dict):
             app.logger.warning("Invalid wrong answer entry format")
             continue
 
-        question_index = wrong.get("question_index")
+        question_index: Optional[int] = wrong.get("question_index")
 
         # Validate question_index exists and is valid
         if question_index is None or not isinstance(question_index, int):
@@ -643,7 +659,7 @@ def review_wrong_answers():
             app.logger.warning("Question index out of range: %s", question_index)
             continue
 
-        question = questions[question_index].copy()
+        question: Dict[str, Any] = questions[question_index].copy()
 
         # Apply shuffling if it was enabled using helper function
         question = apply_shuffle_mapping(question, question_index, shuffle_mappings)
@@ -653,10 +669,10 @@ def review_wrong_answers():
             app.logger.warning("Question missing required fields: %s", question_index)
             continue
 
-        correct_answer_index = question["correct_answer_index"]
+        correct_answer_index: int = question["correct_answer_index"]
 
         # Validate correct_answer_index is within bounds
-        num_options = len(question.get("options", []))
+        num_options: int = len(question.get("options", []))
         if (
             not isinstance(correct_answer_index, int)
             or correct_answer_index < 0
@@ -666,7 +682,7 @@ def review_wrong_answers():
             continue
 
         # Validate user_answer if it exists
-        user_answer = wrong.get("user_answer")
+        user_answer: Optional[int] = wrong.get("user_answer")
         if user_answer is not None:
             if not isinstance(user_answer, int) or user_answer < 0 or user_answer >= num_options:
                 app.logger.warning("Invalid user_answer: %s", user_answer)
@@ -686,7 +702,7 @@ def review_wrong_answers():
 
 # Error Handlers
 @app.errorhandler(429)
-def ratelimit_handler(_error):
+def ratelimit_handler(_error: Any) -> Tuple[str, int]:
     """Handle rate limit exceeded errors."""
     return (
         render_template(
@@ -699,19 +715,19 @@ def ratelimit_handler(_error):
 
 
 @app.errorhandler(404)
-def page_not_found(_error):
+def page_not_found(_error: Any) -> Tuple[str, int]:
     """Handle 404 errors."""
     return render_template("error.html", error_code=404, error_message="Page not found"), 404
 
 
 @app.errorhandler(500)
-def internal_server_error(_error):
+def internal_server_error(_error: Any) -> Tuple[str, int]:
     """Handle 500 errors."""
     return render_template("error.html", error_code=500, error_message="Internal server error"), 500
 
 
 @app.errorhandler(Exception)
-def handle_exception(e):
+def handle_exception(e: Exception) -> Tuple[str, int]:
     """Handle all other exceptions."""
     # Log the error for debugging
     app.logger.error("Unhandled exception: %s", e, exc_info=True)
