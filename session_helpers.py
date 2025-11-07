@@ -33,6 +33,39 @@ def validate_time_remaining() -> Tuple[bool, int]:
     return True, remaining_time
 
 
+def get_server_timestamp() -> float:
+    """
+    Get the current server timestamp.
+
+    Returns:
+        Current server time as Unix timestamp (seconds since epoch)
+    """
+    return time.time()
+
+
+def validate_client_timestamp(
+    client_timestamp: Optional[float], tolerance_seconds: int = 5
+) -> bool:
+    """
+    Validate client timestamp to detect significant clock skew.
+
+    Args:
+        client_timestamp: Timestamp from client (Unix timestamp in seconds)
+        tolerance_seconds: Maximum acceptable time difference in seconds (default: 5)
+
+    Returns:
+        True if client timestamp is within tolerance, False otherwise
+    """
+    if client_timestamp is None:
+        return False
+
+    server_timestamp = get_server_timestamp()
+    time_diff = abs(server_timestamp - client_timestamp)
+
+    # Allow for small differences due to network latency and processing time
+    return time_diff <= tolerance_seconds
+
+
 def initialize_test_session(
     selected_indices: List[int],
     shuffle_mappings: Dict[int, Dict[str, Any]],

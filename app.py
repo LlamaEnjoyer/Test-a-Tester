@@ -26,9 +26,11 @@ from session_helpers import (
     get_current_question_data,
     get_review_data,
     get_score_data,
+    get_server_timestamp,
     increment_question_index,
     initialize_test_session,
     sanitize_score,
+    validate_client_timestamp,
     validate_time_remaining,
 )
 
@@ -245,6 +247,9 @@ def show_question() -> Any:
             q_index, selected_indices, questions, shuffle_mappings
         )
 
+        # Get server timestamp for clock skew detection
+        server_timestamp = get_server_timestamp()
+
         # Render question template
         return render_template(
             "question.html",
@@ -252,6 +257,7 @@ def show_question() -> Any:
             question_number=q_index + 1,
             total_questions=len(selected_indices),
             remaining_time=remaining_time,
+            server_timestamp=server_timestamp,
         )
 
     except ValidationError as e:
@@ -269,6 +275,20 @@ def submit_answer() -> Any:
     Process the submitted answer and advance to the next question.
     """
     try:
+        # Validate client timestamp to detect clock skew
+        client_timestamp_str = request.form.get("client_timestamp")
+        if client_timestamp_str:
+            try:
+                client_timestamp = float(client_timestamp_str)
+                if not validate_client_timestamp(client_timestamp):
+                    app.logger.warning(
+                        "Significant clock skew detected. Client: %s, Server: %s",
+                        client_timestamp,
+                        get_server_timestamp(),
+                    )
+            except (ValueError, TypeError):
+                app.logger.warning("Invalid client timestamp format: %s", client_timestamp_str)
+
         # Validate time remaining
         time_valid, _ = validate_time_remaining()
         if not time_valid:

@@ -5,7 +5,7 @@
 {% block content %}
 <div class="quiz-container">
     <div class="timer" id="timer" data-remaining-time="{{ remaining_time }}"
-        data-score-url="{{ url_for('show_score') }}">
+        data-score-url="{{ url_for('show_score') }}" data-server-timestamp="{{ server_timestamp }}">
         <span id="time-display">--:--</span>
     </div>
     <div class="question-header">
@@ -20,6 +20,7 @@
 
     <form method="post" action="{{ url_for('submit_answer') }}" id="quiz-form">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <input type="hidden" name="client_timestamp" id="client_timestamp" value="" />
         <ul>
             {% for option in question_data.options %}
             <li>
