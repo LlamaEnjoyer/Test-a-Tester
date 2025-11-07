@@ -2,9 +2,14 @@
 Test clock skew detection functionality.
 """
 
+import sys
 import time
+from pathlib import Path
 
-from session_helpers import get_server_timestamp, validate_client_timestamp
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from session_helpers import get_server_timestamp, validate_client_timestamp  # noqa: E402
 
 
 def test_valid_timestamp():

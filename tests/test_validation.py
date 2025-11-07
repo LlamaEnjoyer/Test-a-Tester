@@ -6,10 +6,17 @@ This script tests the validation with intentionally malformed data.
 """
 
 import json
+import sys
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
-from question_validator import QuestionValidationError, validate_questions_file
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from question_validator import QuestionValidationError, validate_questions_file  # noqa: E402
+
+# Schema file location
+SCHEMA_FILE = Path(__file__).parent.parent / "data" / "questions_schema.json"
 
 
 def test_missing_required_field():
@@ -32,7 +39,7 @@ def test_missing_required_field():
         json.dump(invalid_data, f)
         temp_file = Path(f.name)
 
-    schema_file = Path(__file__).parent / "data" / "questions_schema.json"
+    schema_file = SCHEMA_FILE
 
     try:
         validate_questions_file(temp_file, schema_file)
@@ -64,7 +71,7 @@ def test_invalid_answer_index():
         json.dump(invalid_data, f)
         temp_file = Path(f.name)
 
-    schema_file = Path(__file__).parent / "data" / "questions_schema.json"
+    schema_file = SCHEMA_FILE
 
     try:
         validate_questions_file(temp_file, schema_file, strict=True)
@@ -96,7 +103,7 @@ def test_duplicate_options():
         json.dump(invalid_data, f)
         temp_file = Path(f.name)
 
-    schema_file = Path(__file__).parent / "data" / "questions_schema.json"
+    schema_file = SCHEMA_FILE
 
     try:
         validate_questions_file(temp_file, schema_file, strict=True)
@@ -128,7 +135,7 @@ def test_question_too_short():
         json.dump(invalid_data, f)
         temp_file = Path(f.name)
 
-    schema_file = Path(__file__).parent / "data" / "questions_schema.json"
+    schema_file = SCHEMA_FILE
 
     try:
         validate_questions_file(temp_file, schema_file)
@@ -160,7 +167,7 @@ def test_valid_data():
         json.dump(valid_data, f)
         temp_file = Path(f.name)
 
-    schema_file = Path(__file__).parent / "data" / "questions_schema.json"
+    schema_file = SCHEMA_FILE
 
     try:
         questions = validate_questions_file(temp_file, schema_file, strict=True)

@@ -70,6 +70,17 @@ Additional validation happens during quiz execution in `validators.py` and `serv
 
 Validate questions file independently:
 
+**Windows:**
+```cmd
+scripts\validate-data.bat
+```
+
+**Git Bash / Linux / macOS:**
+```bash
+./scripts/validate-data.sh
+```
+
+**Or directly:**
 ```bash
 python validate_questions.py
 ```
@@ -120,7 +131,11 @@ When adding questions to `data/questions.json`:
 4. Avoid duplicate options
 5. Run validation before committing:
    ```bash
-   python validate_questions.py
+   # Windows
+   scripts\validate-data.bat
+   
+   # Git Bash / Linux / macOS
+   ./scripts/validate-data.sh
    ```
 
 ## Example Question Format

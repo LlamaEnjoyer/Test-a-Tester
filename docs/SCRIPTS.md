@@ -1,4 +1,4 @@
-# Quick Reference - Linting Scripts
+# Quick Reference - Development Scripts
 
 ## Windows (Command Prompt / PowerShell)
 
@@ -7,8 +7,10 @@
 | `scripts\format.bat` | Format code with isort and black |
 | `scripts\lint.bat` | Run flake8 and mypy linters |
 | `scripts\check.bat` | Check formatting without making changes |
+| `scripts\test.bat` | Run all unit tests |
+| `scripts\validate-data.bat` | Validate questions data against schema |
 | `scripts\clean.bat` | Remove Python cache files |
-| `scripts\all.bat` | Format + lint everything |
+| `scripts\all.bat` | Format + lint + test everything |
 
 **Usage:**
 ```cmd
@@ -22,7 +24,9 @@ scripts\all.bat
 | `scripts/format.sh` | Format code with isort and black |
 | `scripts/lint.sh` | Run flake8 and mypy linters |
 | `scripts/check.sh` | Check formatting without making changes |
-| `scripts/all.sh` | Format + lint everything |
+| `scripts/test.sh` | Run all unit tests |
+| `scripts/validate-data.sh` | Validate questions data against schema |
+| `scripts/all.sh` | Format + lint + test everything |
 
 **Usage:**
 ```bash
@@ -40,6 +44,15 @@ This will:
 - ✅ Sort imports with isort
 - ✅ Check for code issues with Flake8
 - ✅ Check types with mypy
+- ✅ Run all unit tests
+
+## Data Validation
+
+When adding or modifying questions:
+1. **Windows:** Run `scripts\validate-data.bat`
+2. **Bash:** Run `./scripts/validate-data.sh`
+
+This validates questions data against the JSON schema before committing.
 
 ## Individual Commands
 
@@ -57,6 +70,12 @@ python -m mypy app.py
 # Just check (no changes)
 python -m black --check .
 python -m isort --check-only .
+
+# Just test
+python -m unittest discover tests
+
+# Just validate data
+python validate_questions.py
 ```
 
 ## Note about Makefile

@@ -66,11 +66,17 @@ Test-a-Tester/
 ├── validators.py              # Input validation functions
 ├── question_validator.py      # Questions data validation with JSON Schema
 ├── validate_questions.py      # Standalone validation script
-├── test_validation.py         # Validation test suite
 ├── requirements.txt           # Python dependencies
 ├── data/
 │   ├── questions.json         # Question bank (validated)
 │   └── questions_schema.json  # JSON Schema for questions
+├── tests/                     # Test files
+│   ├── test_services.py       # Tests for business logic
+│   ├── test_validators.py     # Tests for validation functions
+│   ├── test_session_helpers.py # Tests for session management
+│   ├── test_clock_skew.py     # Tests for clock skew detection
+│   ├── test_validation.py     # Integration tests for question validation
+│   └── README.md              # Test documentation
 ├── templates/
 │   ├── base.html              # Base template with theme support
 │   ├── start.html             # Landing page with test configuration
@@ -89,7 +95,8 @@ Test-a-Tester/
 │   ├── format.bat/sh          # Code formatting scripts
 │   ├── lint.bat/sh            # Linting scripts
 │   ├── check.bat/sh           # Format checking scripts
-│   └── all.bat/sh             # Run all checks
+│   ├── test.bat/sh            # Test runner scripts
+│   └── all.bat/sh             # Run all checks (format, lint, test)
 ├── docs/                      # Documentation
 │   ├── CONFIGURATION.md       # Configuration guide
 │   ├── VALIDATION.md          # Data validation documentation
@@ -104,6 +111,17 @@ Test-a-Tester/
 
 Before adding or modifying questions, run the validation script:
 
+**Windows:**
+```cmd
+scripts\validate-data.bat
+```
+
+**Git Bash / Linux / macOS:**
+```bash
+./scripts/validate-data.sh
+```
+
+**Or directly:**
 ```bash
 python validate_questions.py
 ```
@@ -182,9 +200,13 @@ Contributions are welcome! To contribute:
 3. Make your changes
 4. Run validation and linting:
    ```bash
-   python validate_questions.py  # If modifying questions
-   ./scripts/check.sh            # Run all checks (Linux/Mac/Git Bash)
-   scripts\check.bat             # Run all checks (Windows)
+   # Windows
+   scripts\validate-data.bat  # If modifying questions
+   scripts\all.bat            # Run all checks (format, lint, test)
+   
+   # Git Bash / Linux / macOS
+   ./scripts/validate-data.sh # If modifying questions
+   ./scripts/all.sh           # Run all checks (format, lint, test)
    ```
 5. Commit your changes (`git commit -m 'Add NewFeature'`)
 6. Push to the branch (`git push origin feature/NewFeature`)
@@ -199,9 +221,40 @@ This project uses:
 - **MyPy** for type checking
 - **Pylint** for additional checks
 
-Run all checks: `./scripts/check.sh` or `scripts\check.bat`
+Run all checks:
+```bash
+# Windows
+scripts\all.bat
 
-See [docs/LINTING.md](docs/LINTING.md) for detailed documentation.
+# Git Bash / Linux / macOS
+./scripts/all.sh
+```
+
+This includes formatting, linting, and testing.
+
+See [docs/LINTING.md](docs/LINTING.md) and [docs/SCRIPTS.md](docs/SCRIPTS.md) for detailed documentation.
+
+### Running Tests
+
+Run the test suite to verify changes:
+
+```bash
+# Windows
+scripts\test.bat
+
+# Git Bash / Linux / macOS
+./scripts/test.sh
+
+# Or use Makefile
+make test
+
+# Run individual test files
+python tests/test_services.py
+python tests/test_validators.py
+python tests/test_session_helpers.py
+```
+
+See [tests/README.md](tests/README.md) for detailed test documentation.
 
 ## License
 

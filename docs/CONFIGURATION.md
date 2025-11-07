@@ -23,11 +23,24 @@ This will install `python-dotenv` along with other required packages.
 
 ### 2. Create Environment File
 
-Copy the example environment file:
+Create a `.env` file in the project root. You can start with the example:
 
+**Windows (PowerShell):**
+```powershell
+Copy-Item .env.example .env
+```
+
+**Windows (Command Prompt):**
+```cmd
+copy .env.example .env
+```
+
+**Git Bash / Linux / macOS:**
 ```bash
 cp .env.example .env
 ```
+
+**Or manually:** Create a new file named `.env` in the project root and copy contents from `.env.example`.
 
 ### 3. Generate Secret Key
 

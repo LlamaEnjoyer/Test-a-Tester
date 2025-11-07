@@ -6,7 +6,7 @@ help:
 	@echo "  make format     - Format code with black and isort"
 	@echo "  make lint       - Run all linters (flake8, mypy, pylint)"
 	@echo "  make check      - Check formatting without making changes"
-	@echo "  make test       - Run tests (if available)"
+	@echo "  make test       - Run all tests"
 	@echo "  make clean      - Remove Python cache files"
 	@echo "  make all        - Format, lint, and test"
 
@@ -38,6 +38,17 @@ pylint:
 	@echo "Running pylint..."
 	pylint app.py
 
+test:
+	@echo "Running tests..."
+	@for test_file in tests/test_*.py; do \
+		if [ -f "$$test_file" ]; then \
+			echo "Running $$(basename $$test_file)..."; \
+			python "$$test_file" || exit 1; \
+			echo ""; \
+		fi \
+	done
+	@echo "✅ All tests passed!"
+
 clean:
 	find . -type d -name __pycache__ -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
@@ -45,5 +56,5 @@ clean:
 	find . -type d -name ".pytest_cache" -exec rm -rf {} +
 	@echo "✅ Cleaned cache files!"
 
-all: format lint
+all: format lint test
 	@echo "✅ All checks passed!"

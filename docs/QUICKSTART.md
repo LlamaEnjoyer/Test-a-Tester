@@ -17,15 +17,30 @@ pip install -r requirements.txt
 
 ### 2. Create Environment File (1 minute)
 
-```bash
-# Copy the example file
-cp .env.example .env
+Create a `.env` file from the example:
 
-# Generate a secure secret key
-python -c "import secrets; print(f'SECRET_KEY={secrets.token_hex(32)}')"
-
-# Copy the output and paste into .env file
+**Windows (PowerShell):**
+```powershell
+Copy-Item .env.example .env
 ```
+
+**Windows (Command Prompt):**
+```cmd
+copy .env.example .env
+```
+
+**Git Bash / Linux / macOS:**
+```bash
+cp .env.example .env
+```
+
+Generate a secure secret key:
+
+```bash
+python -c "import secrets; print(f'SECRET_KEY={secrets.token_hex(32)}')"
+```
+
+Edit `.env` and replace the `SECRET_KEY` value with the generated output.
 
 Your `.env` file should look like:
 
