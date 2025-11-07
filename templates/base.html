@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Test a Tester{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="no-theme-transition">
+    <!-- Theme initialization script - runs before page render to prevent flash -->
+    <script>(function(){try{if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark-mode');}}catch(e){}})();</script>
+    
+    <!-- Theme toggle button -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+        <span id="theme-icon">🌙</span>
+    </button>
+    
+    <!-- Main content area -->
+    {% block content %}{% endblock %}
+    
+    <!-- Base scripts -->
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    
+    <!-- Page-specific scripts -->
+    {% block scripts %}{% endblock %}
+</body>
+</html>

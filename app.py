@@ -1,14 +1,30 @@
 import json
 import os
 import random
+import secrets
 import time
 from flask import Flask, render_template, request, redirect, url_for, session
+from flask_wtf.csrf import CSRFProtect
 
 # Initialize the Flask application
 app = Flask(__name__)
-# A secret key is needed to use sessions, which store data between requests.
-# Change this to a random string for a real application.
-app.secret_key = os.environ.get("SECRET_KEY", os.urandom(24))
+
+# CRITICAL SECURITY FIX: Use a persistent secret key
+# The secret key MUST be persistent across server restarts to maintain sessions
+# Set SECRET_KEY environment variable or this will generate one and warn you
+secret_key = os.environ.get("SECRET_KEY")
+if not secret_key:
+    # Generate a cryptographically secure random key
+    secret_key = secrets.token_hex(32)
+    print("=" * 80)
+    print("WARNING: No SECRET_KEY environment variable set!")
+    print("Using a temporary generated key. Sessions will be invalidated on restart.")
+    print("For production, set SECRET_KEY environment variable to a secure random value.")
+    print(f"Suggested: export SECRET_KEY='{secret_key}'")
+    print("=" * 80)
+
+app.secret_key = secret_key
+csrf = CSRFProtect(app)
 
 # Time limit settings
 MAX_TIME_LIMIT_MINUTES = 120
@@ -55,6 +71,27 @@ def get_category_counts(questions_list):
         category = question.get("category", "Unknown")
         counts[category] = counts.get(category, 0) + 1
     return counts
+
+
+def validate_time_remaining():
+    """
+    Validate server-side timer to prevent client-side manipulation.
+    Returns (is_valid, remaining_time) tuple.
+    """
+    start_time = session.get("start_time")
+    time_limit = session.get("time_limit", 600)
+    
+    if start_time is None:
+        return False, 0
+    
+    elapsed_time = time.time() - start_time
+    remaining_time = int(time_limit - elapsed_time)
+    
+    # Time has expired
+    if remaining_time <= 0:
+        return False, 0
+    
+    return True, remaining_time
 
 
 questions = load_questions()
@@ -160,21 +197,19 @@ def show_question():
     This route handles both displaying the current question (GET) and
     checking the submitted answer (POST).
     """
+    # SERVER-SIDE TIMER VALIDATION - prevents client-side timer manipulation
+    time_valid, remaining_time = validate_time_remaining()
+    if not time_valid:
+        # Time expired - redirect to score
+        return redirect(url_for("show_score"))
+    
     q_index = session.get("current_question_index", 0)
     selected_indices = session.get("selected_question_indices", [])
-    start_time = session.get("start_time", time.time())
-    time_limit = session.get("time_limit", 600)  # Default to 10 minutes
     shuffle_mappings = session.get("shuffle_mappings")
 
     # If no indices stored, use all questions (fallback)
     if not selected_indices:
         selected_indices = list(range(len(questions)))
-
-    # Check if time has expired
-    elapsed_time = time.time() - start_time
-    if elapsed_time >= time_limit:
-        # Time's up - redirect to score page
-        return redirect(url_for("show_score"))
 
     # If the quiz is over, redirect to the score page
     if q_index >= len(selected_indices):
@@ -194,9 +229,9 @@ def show_question():
         current_question["correct_answer_index"] = mapping["correct_index"]
 
     if request.method == "POST":
-        # Check time again before processing answer
-        elapsed_time = time.time() - start_time
-        if elapsed_time >= time_limit:
+        # Re-validate time on POST to prevent manipulation
+        time_valid, _ = validate_time_remaining()
+        if not time_valid:
             return redirect(url_for("show_score"))
 
         # User has submitted an answer
@@ -258,9 +293,7 @@ def show_question():
         return redirect(url_for("show_question"))
 
     # If it's a GET request, display the current question
-    # Calculate remaining time in seconds
-    remaining_time = int(time_limit - elapsed_time)
-
+    # remaining_time is already calculated from validate_time_remaining()
     return render_template(
         "question.html",
         question_data=current_question,
@@ -323,6 +356,29 @@ def review_wrong_answers():
         )
 
     return render_template("review.html", review_data=review_data)
+
+
+# Error Handlers
+@app.errorhandler(404)
+def page_not_found(_error):
+    """Handle 404 errors."""
+    return render_template("error.html", error_code=404, error_message="Page not found"), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(_error):
+    """Handle 500 errors."""
+    return render_template("error.html", error_code=500, error_message="Internal server error"), 500
+
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    """Handle all other exceptions."""
+    # Log the error for debugging
+    app.logger.error("Unhandled exception: %s", e, exc_info=True)
+    
+    # Return a generic error page
+    return render_template("error.html", error_code=500, error_message="An unexpected error occurred"), 500
 
 
 if __name__ == "__main__":

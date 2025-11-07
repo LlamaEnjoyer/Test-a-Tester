@@ -1,87 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python Quiz</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body class="no-theme-transition">
-    <script>(function(){try{if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark-mode');}}catch(e){}})();</script>
-    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
-        <span id="theme-icon">🌙</span>
-    </button>
-    <div class="quiz-container">
-        <div class="timer" id="timer">
-            <span id="time-display">--:--</span>
-        </div>
-        <div class="question-header">
-            Question {{ question_number }} of {{ total_questions }}
-        </div>
-        
-        <h1>{{ question_data.question }}</h1>
-        
-        {% if question_data.code_snippet %}
-            <pre class="code-snippet"><code>{{ question_data.code_snippet }}</code></pre>
-        {% endif %}
+{% extends "base.html" %}
 
-        <form method="post" id="quiz-form">
-            <ul>
-                {% for option in question_data.options %}
-                <li>
-                    <label>
-                        <input type="radio" name="option" value="{{ loop.index0 }}" required>
-                        {{ option }}
-                    </label>
-                </li>
-                {% endfor %}
-            </ul>
-            <button type="submit">Submit Answer</button>
-        </form>
+{% block title %}Question {{ question_number }} - Test a Tester{% endblock %}
+
+{% block content %}
+<div class="quiz-container">
+    <div class="timer" id="timer">
+        <span id="time-display">--:--</span>
     </div>
-    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-    <script>
-        // Initialize remaining time from server (in seconds)
+    <div class="question-header">
+        Question {{ question_number }} of {{ total_questions }}
+    </div>
+    
+    <h1>{{ question_data.question }}</h1>
+    
+    {% if question_data.code_snippet %}
+        <pre class="code-snippet"><code>{{ question_data.code_snippet }}</code></pre>
+    {% endif %}
+
+    <form method="post" id="quiz-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <ul>
+            {% for option in question_data.options %}
+            <li>
+                <label>
+                    <input type="radio" name="option" value="{{ loop.index0 }}" required>
+                    {{ option }}
+                </label>
+            </li>
+            {% endfor %}
+        </ul>
+        <button type="submit">Submit Answer</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize remaining time from server (in seconds)
     let remainingTime = parseInt('{{ remaining_time }}', 10);
-        const timerElement = document.getElementById('timer');
-        const timeDisplay = document.getElementById('time-display');
+    const timerElement = document.getElementById('timer');
+    const timeDisplay = document.getElementById('time-display');
 
-        function formatTime(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            return `${minutes}:${secs.toString().padStart(2, '0')}`;
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${minutes}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function updateTimer() {
+        if (remainingTime <= 0) {
+            // Time's up - redirect to score page
+            window.location.href = "{{ url_for('show_score') }}";
+            return;
         }
 
-        function updateTimer() {
-            if (remainingTime <= 0) {
-                // Time's up - redirect to score page
-                window.location.href = "{{ url_for('show_score') }}";
-                return;
-            }
-
-            timeDisplay.textContent = formatTime(remainingTime);
-            
-            // Update timer styling based on remaining time
-            if (remainingTime <= 60) {
-                timerElement.className = 'timer danger';
-            } else if (remainingTime <= 180) {
-                timerElement.className = 'timer warning';
-            } else {
-                timerElement.className = 'timer';
-            }
-
-            remainingTime--;
+        timeDisplay.textContent = formatTime(remainingTime);
+        
+        // Update timer styling based on remaining time
+        if (remainingTime <= 60) {
+            timerElement.className = 'timer danger';
+        } else if (remainingTime <= 180) {
+            timerElement.className = 'timer warning';
+        } else {
+            timerElement.className = 'timer';
         }
 
-        // Update timer immediately, then every second
-        updateTimer();
-        const timerInterval = setInterval(updateTimer, 1000);
+        remainingTime--;
+    }
 
-        // Clear interval when form is submitted
-        document.getElementById('quiz-form').addEventListener('submit', function() {
-            clearInterval(timerInterval);
-        });
-    </script>
-</body>
-</html>
+    // Update timer immediately, then every second
+    updateTimer();
+    const timerInterval = setInterval(updateTimer, 1000);
+
+    // Clear interval when form is submitted
+    document.getElementById('quiz-form').addEventListener('submit', function() {
+        clearInterval(timerInterval);
+    });
+</script>
+{% endblock %}
