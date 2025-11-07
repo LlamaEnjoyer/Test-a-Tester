@@ -8,6 +8,13 @@ from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import CSRFProtect
 
 from config import Config
+from constants import (
+    RATELIMIT_DEFAULT,
+    RATELIMIT_QUESTION,
+    RATELIMIT_SCORE,
+    RATELIMIT_START_PAGE,
+    RATELIMIT_START_TEST,
+)
 from question_validator import QuestionValidationError, validate_questions_file
 from services import (
     build_review_data,
@@ -60,7 +67,7 @@ csrf = CSRFProtect(app)
 limiter = Limiter(
     app=app,
     key_func=get_remote_address,
-    default_limits=["200 per day", "50 per hour"],
+    default_limits=RATELIMIT_DEFAULT,  # type: ignore[arg-type]
     storage_uri=config.RATELIMIT_STORAGE_URI,
     strategy="fixed-window",
 )
@@ -104,13 +111,7 @@ def load_questions() -> List[Dict[str, Any]]:
         return validated_questions
 
     except QuestionValidationError as e:
-        logger.error("Questions data validation failed: %s", str(e))
-        separator = "=" * 80
-        logger.error(separator)
-        logger.error("ERROR: Questions data validation failed!")
-        logger.error(separator)
-        logger.error("%s", str(e))
-        logger.error(separator)
+        logger.error("Questions data validation failed:\n%s", str(e))
         raise
 
 
@@ -136,7 +137,7 @@ questions: List[Dict[str, Any]] = load_questions()
 
 
 @app.route("/")
-@limiter.limit("30 per minute")
+@limiter.limit(RATELIMIT_START_PAGE)
 def start() -> str:
     """
     This is the landing page that displays the start screen.
@@ -152,7 +153,7 @@ def start() -> str:
 
 
 @app.route("/start-test", methods=["POST"])
-@limiter.limit("10 per minute")
+@limiter.limit(RATELIMIT_START_TEST)
 def start_test() -> Any:
     """
     Initialize the test state and redirect to the first question.
@@ -208,7 +209,7 @@ def start_test() -> Any:
 
 
 @app.route("/question", methods=["GET"])
-@limiter.limit("60 per minute")
+@limiter.limit(RATELIMIT_QUESTION)
 def show_question() -> Any:
     """
     Display the current question.
@@ -253,8 +254,8 @@ def show_question() -> Any:
         )
 
 
-def _validate_client_timestamp_safe(client_timestamp_str: Optional[str]) -> None:
-    """Validate client timestamp with error handling."""
+def _validate_client_timestamp_with_logging(client_timestamp_str: Optional[str]) -> None:
+    """Validate client timestamp with error handling and logging."""
     if not client_timestamp_str:
         return
 
@@ -297,14 +298,14 @@ def _process_answer_and_update_session(
 
 
 @app.route("/submit-answer", methods=["POST"])
-@limiter.limit("60 per minute")
+@limiter.limit(RATELIMIT_QUESTION)
 def submit_answer() -> Any:
     """
     Process the submitted answer and advance to the next question.
     """
     try:
         # Validate client timestamp to detect clock skew
-        _validate_client_timestamp_safe(request.form.get("client_timestamp"))
+        _validate_client_timestamp_with_logging(request.form.get("client_timestamp"))
 
         # Validate time remaining
         time_valid, _ = validate_time_remaining()
@@ -352,7 +353,7 @@ def submit_answer() -> Any:
 
 
 @app.route("/score")
-@limiter.limit("30 per minute")
+@limiter.limit(RATELIMIT_SCORE)
 def show_score() -> str:
     """Displays the final score to the user."""
     score, selected_indices, wrong_answers = get_score_data()
@@ -367,11 +368,10 @@ def show_score() -> str:
         logger.error("Invalid selected_question_indices type")
         selected_indices = []
 
-    # Calculate total, ensuring it's at least 1 to avoid division by zero
-    total = len(selected_indices) if selected_indices else 1
+    total = len(selected_indices)
 
-    # Sanitize score
-    score = sanitize_score(score, total)
+    # Sanitize score (also ensures total >= 1 internally if needed)
+    score = sanitize_score(score, total if total > 0 else 1)
 
     # Calculate percentage
     percent = calculate_score_percentage(score, total)
@@ -389,7 +389,7 @@ def show_score() -> str:
 
 
 @app.route("/review")
-@limiter.limit("30 per minute")
+@limiter.limit(RATELIMIT_SCORE)
 def review_wrong_answers() -> Any:
     """Display all wrong answers for review."""
     wrong_answers, shuffle_mappings = get_review_data()

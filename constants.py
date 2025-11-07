@@ -5,6 +5,8 @@ This module defines constants used throughout the application
 to avoid magic numbers and improve maintainability.
 """
 
+from typing import Sequence
+
 # Time-related constants (in seconds)
 DEFAULT_TIME_LIMIT_SECONDS = 600  # 10 minutes default
 CLOCK_SKEW_TOLERANCE_SECONDS = 5  # Maximum acceptable time difference
@@ -19,3 +21,10 @@ CLOCK_SKEW_LOG_THRESHOLD = 2  # Log warning if skew > 2 seconds
 
 # UI constants
 SEPARATOR_WIDTH = 80  # Width of separator lines in console output
+
+# Rate limiting constants
+RATELIMIT_DEFAULT: Sequence[str] = ["200 per day", "50 per hour"]
+RATELIMIT_START_PAGE = "30 per minute"
+RATELIMIT_START_TEST = "10 per minute"
+RATELIMIT_QUESTION = "60 per minute"
+RATELIMIT_SCORE = "30 per minute"
