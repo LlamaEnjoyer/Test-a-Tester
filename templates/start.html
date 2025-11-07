@@ -6,28 +6,18 @@
 <div class="start-container">
     <h1>Test a Tester</h1>
     <p>Test your skills with our interactive quiz!</p>
+    <div id="category-data" data-category-counts='{{ category_counts|tojson|safe }}' style="display:none;"></div>
     <form action="{{ url_for('start_test') }}" method="POST" class="config-form">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <div class="config-group">
             <label for="num_questions" class="config-title">Number of Questions:</label>
-            <input type="number" 
-                   id="num_questions" 
-                   name="num_questions" 
-                   min="1" 
-                   max="{{ total_questions }}" 
-                   value="{{ total_questions }}" 
-                   required>
+            <input type="number" id="num_questions" name="num_questions" min="1" max="{{ total_questions }}"
+                value="{{ total_questions }}" required>
             <span class="range-text">(1 - {{ total_questions }})</span>
         </div>
         <div class="config-group">
             <label for="time_limit" class="config-title">Time Limit (minutes):</label>
-            <input type="number" 
-                   id="time_limit" 
-                   name="time_limit" 
-                   min="1" 
-                   max="120" 
-                   value="10" 
-                   required>
+            <input type="number" id="time_limit" name="time_limit" min="1" max="120" value="10" required>
             <span class="range-text">(1 - 120 minutes)</span>
         </div>
         <div class="config-group">
@@ -35,24 +25,19 @@
             <div class="category-group">
                 {% for category in categories %}
                 <div class="category-item">
-                    <input type="checkbox" 
-                           id="category_{{ loop.index }}" 
-                           name="categories" 
-                           value="{{ category }}"
-                           checked>
+                    <input type="checkbox" id="category_{{ loop.index }}" name="categories" value="{{ category }}"
+                        checked>
                     <label for="category_{{ loop.index }}">{{ category }}</label>
                 </div>
                 {% endfor %}
             </div>
-            <span class="error-message" id="category-error" style="font-weight: bold;">Please select at least one category.</span>
+            <span class="error-message" id="category-error" style="font-weight: bold;">Please select at least one
+                category.</span>
         </div>
         <div class="config-group">
             <label class="config-title">Options:</label>
             <div class="category-item">
-                <input type="checkbox" 
-                       id="shuffle_answers" 
-                       name="shuffle_answers" 
-                       value="true">
+                <input type="checkbox" id="shuffle_answers" name="shuffle_answers" value="true">
                 <label for="shuffle_answers">Shuffle answer options (makes it harder!)</label>
             </div>
         </div>
@@ -62,52 +47,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-    // Category counts for each category
-    const categoryCounts = JSON.parse('{{ category_counts|tojson|safe }}');
-    const numQuestionsInput = document.getElementById('num_questions');
-    const rangeText = document.querySelector('.range-text');
-    
-    function updateMaxQuestions() {
-        const selectedCategories = Array.from(document.querySelectorAll('input[name="categories"]:checked'))
-            .map(cb => cb.value);
-        
-        let maxQuestions = 0;
-        selectedCategories.forEach(cat => {
-            maxQuestions += categoryCounts[cat] || 0;
-        });
-        
-        if (maxQuestions > 0) {
-            numQuestionsInput.max = maxQuestions;
-            if (parseInt(numQuestionsInput.value) > maxQuestions) {
-                numQuestionsInput.value = maxQuestions;
-            }
-            rangeText.textContent = `(1 - ${maxQuestions})`;
-        }
-    }
-    
-    document.querySelector('.config-form').addEventListener('submit', function(e) {
-        const checkboxes = document.querySelectorAll('input[name="categories"]:checked');
-        const errorMessage = document.getElementById('category-error');
-        
-        if (checkboxes.length === 0) {
-            e.preventDefault();
-            errorMessage.style.display = 'block';
-            return false;
-        } else {
-            errorMessage.style.display = 'none';
-        }
-    });
-
-    // Hide error message and update max questions when user checks a category
-    document.querySelectorAll('input[name="categories"]').forEach(function(checkbox) {
-        checkbox.addEventListener('change', function() {
-            const anyChecked = document.querySelectorAll('input[name="categories"]:checked').length > 0;
-            if (anyChecked) {
-                document.getElementById('category-error').style.display = 'none';
-            }
-            updateMaxQuestions();
-        });
-    });
-</script>
+<script src="{{ url_for('static', filename='js/start.js') }}" defer></script>
 {% endblock %}

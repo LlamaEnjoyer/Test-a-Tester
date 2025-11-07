@@ -4,21 +4,22 @@
 
 {% block content %}
 <div class="quiz-container">
-    <div class="timer" id="timer">
+    <div class="timer" id="timer" data-remaining-time="{{ remaining_time }}"
+        data-score-url="{{ url_for('show_score') }}">
         <span id="time-display">--:--</span>
     </div>
     <div class="question-header">
         Question {{ question_number }} of {{ total_questions }}
     </div>
-    
+
     <h1>{{ question_data.question }}</h1>
-    
+
     {% if question_data.code_snippet %}
-        <pre class="code-snippet"><code>{{ question_data.code_snippet }}</code></pre>
+    <pre class="code-snippet"><code>{{ question_data.code_snippet }}</code></pre>
     {% endif %}
 
     <form method="post" id="quiz-form">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <ul>
             {% for option in question_data.options %}
             <li>
@@ -35,46 +36,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-    // Initialize remaining time from server (in seconds)
-    let remainingTime = parseInt('{{ remaining_time }}', 10);
-    const timerElement = document.getElementById('timer');
-    const timeDisplay = document.getElementById('time-display');
-
-    function formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${minutes}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    function updateTimer() {
-        if (remainingTime <= 0) {
-            // Time's up - redirect to score page
-            window.location.href = "{{ url_for('show_score') }}";
-            return;
-        }
-
-        timeDisplay.textContent = formatTime(remainingTime);
-        
-        // Update timer styling based on remaining time
-        if (remainingTime <= 60) {
-            timerElement.className = 'timer danger';
-        } else if (remainingTime <= 180) {
-            timerElement.className = 'timer warning';
-        } else {
-            timerElement.className = 'timer';
-        }
-
-        remainingTime--;
-    }
-
-    // Update timer immediately, then every second
-    updateTimer();
-    const timerInterval = setInterval(updateTimer, 1000);
-
-    // Clear interval when form is submitted
-    document.getElementById('quiz-form').addEventListener('submit', function() {
-        clearInterval(timerInterval);
-    });
-</script>
+<script src="{{ url_for('static', filename='js/question.js') }}" defer></script>
 {% endblock %}
