@@ -183,50 +183,116 @@ def start_test():
     This route initializes the test state in the session
     and redirects to the first question.
     """
-    # Get the selected categories
+    # BACKEND VALIDATION: Get and validate selected categories
     selected_categories = request.form.getlist("categories")
+    
+    # Validate categories exist and are non-empty
+    if not selected_categories:
+        app.logger.warning("No categories selected - validation failed")
+        return render_template(
+            "error.html",
+            error_code=400,
+            error_message="Please select at least one category"
+        ), 400
+    
+    # Validate all selected categories are valid
+    valid_categories = get_unique_categories(questions)
+    for category in selected_categories:
+        if category not in valid_categories:
+            app.logger.warning("Invalid category submitted: %s", category)
+            return render_template(
+                "error.html",
+                error_code=400,
+                error_message="Invalid category selection"
+            ), 400
 
     # Filter questions by selected categories
     filtered_questions = [
         q for q in questions if q.get("category") in selected_categories
     ]
 
-    # If no questions match the selected categories, use all questions
+    # If no questions match the selected categories, reject the request
     if not filtered_questions:
-        filtered_questions = questions
+        app.logger.warning("No questions available for selected categories")
+        return render_template(
+            "error.html",
+            error_code=400,
+            error_message="No questions available for selected categories"
+        ), 400
 
-    # Get the number of questions requested (default to all filtered questions)
+    # BACKEND VALIDATION: Get and validate number of questions
     num_questions = request.form.get("num_questions", type=int)
 
-    # Validate the input - use filtered questions length as default
-    if num_questions is None or num_questions < 1:
-        num_questions = len(filtered_questions)
+    # Validate num_questions is a positive integer
+    if num_questions is None or not isinstance(num_questions, int):
+        app.logger.warning("Invalid num_questions format")
+        return render_template(
+            "error.html",
+            error_code=400,
+            error_message="Number of questions must be a valid number"
+        ), 400
     
-    # Get the time limit in minutes (default to 10)
+    if num_questions < 1:
+        app.logger.warning("Invalid num_questions value: %s", num_questions)
+        return render_template(
+            "error.html",
+            error_code=400,
+            error_message="Number of questions must be at least 1"
+        ), 400
+    
+    if num_questions > len(filtered_questions):
+        app.logger.warning("Requested questions (%s) exceeds available (%s)", 
+                         num_questions, len(filtered_questions))
+        return render_template(
+            "error.html",
+            error_code=400,
+            error_message=f"Only {len(filtered_questions)} questions available for selected categories"
+        ), 400
+    
+    # BACKEND VALIDATION: Get and validate time limit
     time_limit = request.form.get("time_limit", type=int)
-    if time_limit is None:
-        time_limit = DEFAULT_TIME_LIMIT_MINUTES
     
-    # Validate test configuration
-    is_valid, error_message = validate_test_configuration(
-        selected_categories, num_questions, time_limit, filtered_questions
-    )
+    if time_limit is None or not isinstance(time_limit, int):
+        app.logger.warning("Invalid time_limit format")
+        return render_template(
+            "error.html",
+            error_code=400,
+            error_message="Time limit must be a valid number"
+        ), 400
     
-    if not is_valid:
-        # In a production app, you'd flash this message and redirect back
-        # For now, we'll log it and use safe defaults
-        app.logger.warning("Invalid test configuration: %s", error_message)
-        # Redirect back to start if validation fails
-        return redirect(url_for("start"))
+    if time_limit < MIN_TIME_LIMIT_MINUTES:
+        app.logger.warning("Time limit too low: %s", time_limit)
+        return render_template(
+            "error.html",
+            error_code=400,
+            error_message=f"Time limit must be at least {MIN_TIME_LIMIT_MINUTES} minute(s)"
+        ), 400
+    
+    if time_limit > MAX_TIME_LIMIT_MINUTES:
+        app.logger.warning("Time limit too high: %s", time_limit)
+        return render_template(
+            "error.html",
+            error_code=400,
+            error_message=f"Time limit cannot exceed {MAX_TIME_LIMIT_MINUTES} minutes"
+        ), 400
 
-    # Ensure num_questions doesn't exceed available questions
+    # Ensure num_questions doesn't exceed available questions (defensive)
     num_questions = min(num_questions, len(filtered_questions))
     
-    # Ensure time_limit is within bounds
+    # Ensure time_limit is within bounds (defensive)
     time_limit = max(MIN_TIME_LIMIT_MINUTES, min(time_limit, MAX_TIME_LIMIT_MINUTES))
 
-    # Get the shuffle answers option
-    shuffle_answers = request.form.get("shuffle_answers") == "true"
+    # BACKEND VALIDATION: Validate shuffle_answers is a boolean value
+    shuffle_answers_str = request.form.get("shuffle_answers", "false").lower()
+    if shuffle_answers_str not in ["true", "false"]:
+        app.logger.warning("Invalid shuffle_answers value: %s", shuffle_answers_str)
+        return render_template(
+            "error.html",
+            error_code=400,
+            error_message="Invalid shuffle option"
+        ), 400
+    
+    shuffle_answers = shuffle_answers_str == "true"
 
     # Randomly select questions from the filtered pool
     selected_questions = random.sample(filtered_questions, num_questions)
@@ -277,19 +343,61 @@ def show_question():
         # Time expired - redirect to score
         return redirect(url_for("show_score"))
     
-    q_index = session.get("current_question_index", 0)
-    selected_indices = session.get("selected_question_indices", [])
+    # BACKEND VALIDATION: Validate session data integrity
+    q_index = session.get("current_question_index")
+    selected_indices = session.get("selected_question_indices")
     shuffle_mappings = session.get("shuffle_mappings")
+    
+    # Validate session contains required data
+    if q_index is None:
+        app.logger.error("Missing current_question_index in session")
+        return render_template(
+            "error.html",
+            error_code=400,
+            error_message="Invalid test session. Please start a new test."
+        ), 400
+    
+    if not selected_indices or not isinstance(selected_indices, list):
+        app.logger.error("Invalid or missing selected_question_indices in session")
+        return render_template(
+            "error.html",
+            error_code=400,
+            error_message="Invalid test session. Please start a new test."
+        ), 400
+    
+    # Validate q_index is within valid range
+    if not isinstance(q_index, int) or q_index < 0:
+        app.logger.error("Invalid current_question_index: %s", q_index)
+        return render_template(
+            "error.html",
+            error_code=400,
+            error_message="Invalid question index"
+        ), 400
 
-    # If no indices stored, use all questions (fallback)
-    if not selected_indices:
-        selected_indices = list(range(len(questions)))
+    # Validate q_index is within valid range
+    if not isinstance(q_index, int) or q_index < 0:
+        app.logger.error("Invalid current_question_index: %s", q_index)
+        return render_template(
+            "error.html",
+            error_code=400,
+            error_message="Invalid question index"
+        ), 400
 
     # If the quiz is over, redirect to the score page
     if q_index >= len(selected_indices):
         return redirect(url_for("show_score"))
-
+    
+    # BACKEND VALIDATION: Validate the selected question index is valid
     current_question_index = selected_indices[q_index]
+    
+    if not isinstance(current_question_index, int) or current_question_index < 0 or current_question_index >= len(questions):
+        app.logger.error("Invalid question index in selected_indices: %s", current_question_index)
+        return render_template(
+            "error.html",
+            error_code=400,
+            error_message="Invalid question reference"
+        ), 400
+    
     current_question = questions[current_question_index].copy()
 
     # Apply shuffling if enabled using helper function
@@ -303,7 +411,7 @@ def show_question():
         if not time_valid:
             return redirect(url_for("show_score"))
 
-        # User has submitted an answer
+        # BACKEND VALIDATION: User has submitted an answer - validate it thoroughly
         user_answer = request.form.get("option")
 
         # Determine the correct answer index (considering shuffle)
@@ -311,10 +419,29 @@ def show_question():
             correct_answer_index = shuffle_mappings[current_question_index][
                 "correct_index"
             ]
+            # BACKEND VALIDATION: Validate shuffle mapping integrity
+            if not isinstance(correct_answer_index, int):
+                app.logger.error("Invalid correct_answer_index in shuffle_mappings")
+                return render_template(
+                    "error.html",
+                    error_code=500,
+                    error_message="Invalid test configuration"
+                ), 500
         else:
             correct_answer_index = questions[current_question_index][
                 "correct_answer_index"
             ]
+        
+        # BACKEND VALIDATION: Validate correct_answer_index is within bounds
+        num_options = len(current_question.get("options", []))
+        if not isinstance(correct_answer_index, int) or correct_answer_index < 0 or correct_answer_index >= num_options:
+            app.logger.error("Invalid correct_answer_index: %s for question with %s options", 
+                           correct_answer_index, num_options)
+            return render_template(
+                "error.html",
+                error_code=500,
+                error_message="Invalid question configuration"
+            ), 500
 
         # Validate that an answer was actually provided
         if user_answer is None or user_answer == "":
@@ -329,23 +456,11 @@ def show_question():
             )
             session["wrong_answers"] = wrong_answers
         else:
-            # Check if the submitted answer is correct
+            # BACKEND VALIDATION: Validate user_answer is a valid integer
             try:
                 user_answer_int = int(user_answer)
-                if user_answer_int == correct_answer_index:
-                    session["score"] += 1
-                else:
-                    # Store wrong answer details for review
-                    wrong_answers = session.get("wrong_answers", [])
-                    wrong_answers.append(
-                        {
-                            "question_index": current_question_index,
-                            "user_answer": user_answer_int,
-                            "question_number": q_index + 1,
-                        }
-                    )
-                    session["wrong_answers"] = wrong_answers
-            except ValueError:
+            except (ValueError, TypeError):
+                app.logger.warning("Invalid answer format submitted: %s", user_answer)
                 # Invalid answer format - treat as wrong
                 wrong_answers = session.get("wrong_answers", [])
                 wrong_answers.append(
@@ -356,6 +471,36 @@ def show_question():
                     }
                 )
                 session["wrong_answers"] = wrong_answers
+            else:
+                # BACKEND VALIDATION: Validate user_answer is within valid option range
+                if user_answer_int < 0 or user_answer_int >= num_options:
+                    app.logger.warning("Answer index out of range: %s (max: %s)", 
+                                     user_answer_int, num_options - 1)
+                    # Out of range answer - treat as wrong
+                    wrong_answers = session.get("wrong_answers", [])
+                    wrong_answers.append(
+                        {
+                            "question_index": current_question_index,
+                            "user_answer": None,
+                            "question_number": q_index + 1,
+                        }
+                    )
+                    session["wrong_answers"] = wrong_answers
+                else:
+                    # Valid answer - check if correct
+                    if user_answer_int == correct_answer_index:
+                        session["score"] = session.get("score", 0) + 1
+                    else:
+                        # Store wrong answer details for review
+                        wrong_answers = session.get("wrong_answers", [])
+                        wrong_answers.append(
+                            {
+                                "question_index": current_question_index,
+                                "user_answer": user_answer_int,
+                                "question_number": q_index + 1,
+                            }
+                        )
+                        session["wrong_answers"] = wrong_answers
 
         # Move to the next question
         session["current_question_index"] = q_index + 1
@@ -375,12 +520,35 @@ def show_question():
 @app.route("/score")
 def show_score():
     """Displays the final score to the user."""
+    # BACKEND VALIDATION: Validate session data
     score = session.get("score", 0)
     selected_indices = session.get("selected_question_indices", [])
     wrong_answers = session.get("wrong_answers", [])
-    total = len(selected_indices) if selected_indices else len(questions)
+    
+    # Validate score is a non-negative integer
+    if not isinstance(score, int) or score < 0:
+        app.logger.warning("Invalid score in session: %s", score)
+        score = 0
+    
+    # Validate selected_indices is a list
+    if not isinstance(selected_indices, list):
+        app.logger.error("Invalid selected_question_indices type")
+        selected_indices = []
+    
+    # Calculate total, ensuring it's at least 1 to avoid division by zero
+    total = len(selected_indices) if selected_indices else 1
+    
+    # Validate score doesn't exceed total
+    if score > total:
+        app.logger.warning("Score (%s) exceeds total questions (%s)", score, total)
+        score = total
+    
+    # Calculate percentage
     percent = int((score / total) * 100) if total > 0 else 0
-    has_wrong_answers = len(wrong_answers) > 0
+    
+    # Validate wrong_answers is a list
+    has_wrong_answers = isinstance(wrong_answers, list) and len(wrong_answers) > 0
+    
     return render_template(
         "score.html",
         percent=percent,
@@ -394,6 +562,12 @@ def show_score():
 def review_wrong_answers():
     """Display all wrong answers for review."""
     wrong_answers = session.get("wrong_answers", [])
+    
+    # BACKEND VALIDATION: Ensure wrong_answers is a list
+    if not isinstance(wrong_answers, list):
+        app.logger.error("Invalid wrong_answers data type in session")
+        return redirect(url_for("show_score"))
+    
     if not wrong_answers:
         return redirect(url_for("show_score"))
 
@@ -402,18 +576,52 @@ def review_wrong_answers():
     # Build a list of wrong answer details
     review_data = []
     for wrong in wrong_answers:
-        question_index = wrong["question_index"]
+        # BACKEND VALIDATION: Validate each wrong answer entry
+        if not isinstance(wrong, dict):
+            app.logger.warning("Invalid wrong answer entry format")
+            continue
+        
+        question_index = wrong.get("question_index")
+        
+        # Validate question_index exists and is valid
+        if question_index is None or not isinstance(question_index, int):
+            app.logger.warning("Invalid question_index in wrong answer: %s", question_index)
+            continue
+        
+        if question_index < 0 or question_index >= len(questions):
+            app.logger.warning("Question index out of range: %s", question_index)
+            continue
+        
         question = questions[question_index].copy()
 
         # Apply shuffling if it was enabled using helper function
         question = apply_shuffle_mapping(question, question_index, shuffle_mappings)
+        
+        # BACKEND VALIDATION: Ensure question has required fields
+        if "correct_answer_index" not in question or "options" not in question:
+            app.logger.warning("Question missing required fields: %s", question_index)
+            continue
+        
         correct_answer_index = question["correct_answer_index"]
+        
+        # Validate correct_answer_index is within bounds
+        num_options = len(question.get("options", []))
+        if not isinstance(correct_answer_index, int) or correct_answer_index < 0 or correct_answer_index >= num_options:
+            app.logger.warning("Invalid correct_answer_index for question %s", question_index)
+            continue
+        
+        # Validate user_answer if it exists
+        user_answer = wrong.get("user_answer")
+        if user_answer is not None:
+            if not isinstance(user_answer, int) or user_answer < 0 or user_answer >= num_options:
+                app.logger.warning("Invalid user_answer: %s", user_answer)
+                user_answer = None  # Treat as unanswered
 
         review_data.append(
             {
-                "question_number": wrong["question_number"],
+                "question_number": wrong.get("question_number", 0),
                 "question": question,
-                "user_answer": wrong["user_answer"],
+                "user_answer": user_answer,
                 "correct_answer_index": correct_answer_index,
             }
         )
