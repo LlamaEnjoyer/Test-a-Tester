@@ -1,64 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Review Wrong Answers</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body class="no-theme-transition">
-    <script>(function(){try{if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark-mode');}}catch(e){}})();</script>
-    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
-        <span id="theme-icon">🌙</span>
-    </button>
-    <div class="review-container">
-        <h1>Review Wrong Answers</h1>
-        
-        {% for item in review_data %}
-        <div class="question-block">
-            <div class="question-header">
-                Question {{ item.question_number }} 
-                <span class="badge badge-wrong">Your Answer</span>
-                <span class="badge badge-correct">Correct Answer</span>
-            </div>
-            
-            <div class="question-text">
-                {{ item.question.question }}
-            </div>
-            
-            {% if item.question.code_snippet %}
-            <pre class="code-snippet"><code>{{ item.question.code_snippet }}</code></pre>
-            {% endif %}
-            
-            <ul class="options-list">
-                {% for option in item.question.options %}
-                <li class="option-item 
-                    {% if loop.index0 == item.correct_answer_index %}option-correct{% endif %}
-                    {% if loop.index0 == item.user_answer %}option-wrong{% endif %}">
-                    {{ option }}
-                    {% if loop.index0 == item.correct_answer_index %}
-                        ✓ Correct Answer
-                    {% endif %}
-                    {% if loop.index0 == item.user_answer %}
-                        ✗ Your Answer
-                    {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
-            
-            {% if item.question.explanation %}
-            <div class="explanation">
-                <strong>Explanation:</strong> {{ item.question.explanation }}
-            </div>
-            {% endif %}
+{% extends "base.html" %}
+
+{% block title %}Review Wrong Answers - Test a Tester{% endblock %}
+
+{% block content %}
+<div class="review-container">
+    <h1>Review Wrong Answers</h1>
+    
+    {% for item in review_data %}
+    <div class="question-block">
+        <div class="question-header">
+            Question {{ item.question_number }} 
+            <span class="badge badge-wrong">Your Answer</span>
+            <span class="badge badge-correct">Correct Answer</span>
         </div>
-        {% endfor %}
         
-        <div class="button-container">
-            <a href="{{ url_for('show_score') }}" class="btn">Back to Score</a>
-            <a href="{{ url_for('start') }}" class="btn">Try Again</a>
+        <div class="question-text">
+            {{ item.question.question }}
         </div>
+        
+        {% if item.question.code_snippet %}
+        <pre class="code-snippet"><code>{{ item.question.code_snippet }}</code></pre>
+        {% endif %}
+        
+        <ul class="options-list">
+            {% for option in item.question.options %}
+            <li class="option-item 
+                {% if loop.index0 == item.correct_answer_index %}option-correct{% endif %}
+                {% if loop.index0 == item.user_answer %}option-wrong{% endif %}">
+                {{ option }}
+                {% if loop.index0 == item.correct_answer_index %}
+                    ✓ Correct Answer
+                {% endif %}
+                {% if loop.index0 == item.user_answer %}
+                    ✗ Your Answer
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        
+        {% if item.question.explanation %}
+        <div class="explanation">
+            <strong>Explanation:</strong> {{ item.question.explanation }}
+        </div>
+        {% endif %}
     </div>
-    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-</body>
-</html>
+    {% endfor %}
+    
+    <div class="button-container">
+        <a href="{{ url_for('show_score') }}" class="btn">Back to Score</a>
+        <a href="{{ url_for('start') }}" class="btn">Try Again</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,26 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Test Score</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body class="no-theme-transition">
-    <script>(function(){try{if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark-mode');}}catch(e){}})();</script>
-    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
-        <span id="theme-icon">🌙</span>
-    </button>
-    <div class="score-container">
-        <h1>Test Complete!</h1>
-        <p>Your final score is: {{percent}}% ({{ score }} / {{ total_questions }})</p>
-        <div class="score-actions">
-            <a href="{{ url_for('start') }}" class="btn">Try Again</a>
-            {% if has_wrong_answers %}
-            <a href="{{ url_for('review_wrong_answers') }}" class="btn btn-warning">Review Wrong Answers</a>
-            {% endif %}
-        </div>
+{% extends "base.html" %}
+
+{% block title %}Test Score - Test a Tester{% endblock %}
+
+{% block content %}
+<div class="score-container">
+    <h1>Test Complete!</h1>
+    <p>Your final score is: {{percent}}% ({{ score }} / {{ total_questions }})</p>
+    <div class="score-actions">
+        <a href="{{ url_for('start') }}" class="btn">Try Again</a>
+        {% if has_wrong_answers %}
+        <a href="{{ url_for('review_wrong_answers') }}" class="btn btn-warning">Review Wrong Answers</a>
+        {% endif %}
     </div>
-    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-</body>
-</html>
+</div>
+{% endblock %}
