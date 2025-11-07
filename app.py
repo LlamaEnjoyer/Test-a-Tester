@@ -6,6 +6,8 @@ import time
 from datetime import timedelta
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_wtf.csrf import CSRFProtect
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -35,6 +37,15 @@ app.config.update(
 )
 
 csrf = CSRFProtect(app)
+
+# Initialize rate limiter
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://",
+    strategy="fixed-window"
+)
 
 # Time limit settings
 MAX_TIME_LIMIT_MINUTES = 120
@@ -163,6 +174,7 @@ questions = load_questions()
 
 
 @app.route("/")
+@limiter.limit("30 per minute")
 def start():
     """
     This is the landing page that displays the start screen.
@@ -178,6 +190,7 @@ def start():
 
 
 @app.route("/start-test", methods=["POST"])
+@limiter.limit("10 per minute")
 def start_test():
     """
     This route initializes the test state in the session
@@ -332,6 +345,7 @@ def start_test():
 
 
 @app.route("/question", methods=["GET", "POST"])
+@limiter.limit("60 per minute")
 def show_question():
     """
     This route handles both displaying the current question (GET) and
@@ -518,6 +532,7 @@ def show_question():
 
 
 @app.route("/score")
+@limiter.limit("30 per minute")
 def show_score():
     """Displays the final score to the user."""
     # BACKEND VALIDATION: Validate session data
@@ -559,6 +574,7 @@ def show_score():
 
 
 @app.route("/review")
+@limiter.limit("30 per minute")
 def review_wrong_answers():
     """Display all wrong answers for review."""
     wrong_answers = session.get("wrong_answers", [])
@@ -630,6 +646,16 @@ def review_wrong_answers():
 
 
 # Error Handlers
+@app.errorhandler(429)
+def ratelimit_handler(_error):
+    """Handle rate limit exceeded errors."""
+    return render_template(
+        "error.html", 
+        error_code=429, 
+        error_message="Too many requests. Please slow down and try again later."
+    ), 429
+
+
 @app.errorhandler(404)
 def page_not_found(_error):
     """Handle 404 errors."""
