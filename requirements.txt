@@ -2,6 +2,7 @@ Flask==3.0.0
 Flask-WTF==1.2.1
 Flask-Limiter==3.5.0
 jsonschema==4.23.0
+python-dotenv==1.0.0
 
 # Development Tools - Linting and Formatting
 black==24.10.0

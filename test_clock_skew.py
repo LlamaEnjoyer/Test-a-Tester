@@ -3,10 +3,8 @@ Test clock skew detection functionality.
 """
 
 import time
-from session_helpers import (
-    get_server_timestamp,
-    validate_client_timestamp,
-)
+
+from session_helpers import get_server_timestamp, validate_client_timestamp
 
 
 def test_valid_timestamp():

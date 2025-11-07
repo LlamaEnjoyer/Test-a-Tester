@@ -1,6 +1,4 @@
-import os
-import secrets
-from datetime import timedelta
+import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
@@ -9,6 +7,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import CSRFProtect
 
+from config import Config
 from question_validator import QuestionValidationError, validate_questions_file
 from services import (
     build_review_data,
@@ -47,29 +46,13 @@ from validators import (
 # Initialize the Flask application
 app = Flask(__name__)
 
-# CRITICAL SECURITY FIX: Use a persistent secret key
-# The secret key MUST be persistent across server restarts to maintain sessions
-# Set SECRET_KEY environment variable or this will generate one and warn you
-secret_key: Optional[str] = os.environ.get("SECRET_KEY")
-if not secret_key:
-    # Generate a cryptographically secure random key
-    secret_key = secrets.token_hex(32)
-    print("=" * 80)
-    print("WARNING: No SECRET_KEY environment variable set!")
-    print("Using a temporary generated key. Sessions will be invalidated on restart.")
-    print("For production, set SECRET_KEY environment variable to a secure random value.")
-    print(f"Suggested: export SECRET_KEY='{secret_key}'")
-    print("=" * 80)
+# Load configuration
+config = Config()
+config.setup_logging()
+config.apply_to_flask_app(app)
 
-app.secret_key = secret_key
-
-# Production-ready session security settings
-app.config.update(
-    SESSION_COOKIE_SECURE=os.environ.get("SESSION_COOKIE_SECURE", "False").lower() == "true",
-    SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SAMESITE="Lax",
-    PERMANENT_SESSION_LIFETIME=timedelta(hours=2),
-)
+# Get logger for this module
+logger = logging.getLogger(__name__)
 
 csrf = CSRFProtect(app)
 
@@ -78,14 +61,14 @@ limiter = Limiter(
     app=app,
     key_func=get_remote_address,
     default_limits=["200 per day", "50 per hour"],
-    storage_uri="memory://",
+    storage_uri=config.RATELIMIT_STORAGE_URI,
     strategy="fixed-window",
 )
 
-# Time limit settings
-MAX_TIME_LIMIT_MINUTES = 120
-MIN_TIME_LIMIT_MINUTES = 1
-DEFAULT_TIME_LIMIT_MINUTES = 10
+# Get time limit settings from config
+MAX_TIME_LIMIT_MINUTES = config.MAX_TIME_LIMIT_MINUTES
+MIN_TIME_LIMIT_MINUTES = config.MIN_TIME_LIMIT_MINUTES
+DEFAULT_TIME_LIMIT_MINUTES = config.DEFAULT_TIME_LIMIT_MINUTES
 
 
 def load_questions() -> List[Dict[str, Any]]:
@@ -118,9 +101,11 @@ def load_questions() -> List[Dict[str, Any]]:
             raise ValueError("Questions file must contain a non-empty JSON array")
 
         print(f"✓ Successfully loaded and validated {len(validated_questions)} questions")
+        logger.info("Successfully loaded and validated %d questions", len(validated_questions))
         return validated_questions
 
     except QuestionValidationError as e:
+        logger.error("Questions data validation failed: %s", str(e))
         print("=" * 80)
         print("ERROR: Questions data validation failed!")
         print("=" * 80)
@@ -215,7 +200,7 @@ def start_test() -> Any:
         return redirect(url_for("show_question"))
 
     except ValidationError as e:
-        app.logger.warning("Validation error: %s", e.message)
+        logger.warning("Validation error in start_test: %s", e.message)
         return (
             render_template("error.html", error_code=e.code, error_message=e.message),
             e.code,
@@ -261,11 +246,54 @@ def show_question() -> Any:
         )
 
     except ValidationError as e:
-        app.logger.error("Validation error in show_question: %s", e.message)
+        logger.error("Validation error in show_question: %s", e.message)
         return (
             render_template("error.html", error_code=e.code, error_message=e.message),
             e.code,
         )
+
+
+def _validate_client_timestamp_safe(client_timestamp_str: Optional[str]) -> None:
+    """Validate client timestamp with error handling."""
+    if not client_timestamp_str:
+        return
+
+    try:
+        client_timestamp = float(client_timestamp_str)
+        if not validate_client_timestamp(client_timestamp):
+            logger.warning(
+                "Significant clock skew detected. Client: %s, Server: %s",
+                client_timestamp,
+                get_server_timestamp(),
+            )
+    except (ValueError, TypeError):
+        logger.warning("Invalid client timestamp format: %s", client_timestamp_str)
+
+
+def _process_answer_and_update_session(
+    user_answer_int: Optional[int],
+    current_question_index: int,
+    q_index: int,
+    current_question: Dict[str, Any],
+    shuffle_mappings: Optional[Dict[int, Dict[str, Any]]],
+) -> None:
+    """Process the answer and update session state."""
+    if user_answer_int is None:
+        logger.warning("Invalid answer format")
+
+    is_correct, wrong_answer_data = handle_answer_submission(
+        user_answer_int,
+        current_question_index,
+        q_index,
+        questions,
+        shuffle_mappings,
+        current_question,
+    )
+
+    if is_correct:
+        add_to_score()
+    elif wrong_answer_data is not None:
+        add_wrong_answer(wrong_answer_data)
 
 
 @app.route("/submit-answer", methods=["POST"])
@@ -276,18 +304,7 @@ def submit_answer() -> Any:
     """
     try:
         # Validate client timestamp to detect clock skew
-        client_timestamp_str = request.form.get("client_timestamp")
-        if client_timestamp_str:
-            try:
-                client_timestamp = float(client_timestamp_str)
-                if not validate_client_timestamp(client_timestamp):
-                    app.logger.warning(
-                        "Significant clock skew detected. Client: %s, Server: %s",
-                        client_timestamp,
-                        get_server_timestamp(),
-                    )
-            except (ValueError, TypeError):
-                app.logger.warning("Invalid client timestamp format: %s", client_timestamp_str)
+        _validate_client_timestamp_safe(request.form.get("client_timestamp"))
 
         # Validate time remaining
         time_valid, _ = validate_time_remaining()
@@ -313,31 +330,21 @@ def submit_answer() -> Any:
         num_options = len(current_question.get("options", []))
         user_answer_int = validate_and_parse_user_answer(user_answer_str, num_options)
 
-        if user_answer_int is None:
-            app.logger.warning("Invalid answer format: %s", user_answer_str)
-
-        # Handle answer submission
-        is_correct, wrong_answer_data = handle_answer_submission(
+        # Process answer and update session
+        _process_answer_and_update_session(
             user_answer_int,
             current_question_index,
             q_index,
-            questions,
-            shuffle_mappings,
             current_question,
+            shuffle_mappings,
         )
-
-        # Update session based on answer
-        if is_correct:
-            add_to_score()
-        elif wrong_answer_data is not None:
-            add_wrong_answer(wrong_answer_data)
 
         # Move to next question
         increment_question_index()
         return redirect(url_for("show_question"))
 
     except ValidationError as e:
-        app.logger.error("Validation error in submit_answer: %s", e.message)
+        logger.error("Validation error in submit_answer: %s", e.message)
         return (
             render_template("error.html", error_code=e.code, error_message=e.message),
             e.code,
@@ -352,12 +359,12 @@ def show_score() -> str:
 
     # Validate and sanitize score
     if not isinstance(score, int) or score < 0:
-        app.logger.warning("Invalid score in session: %s", score)
+        logger.warning("Invalid score in session: %s", score)
         score = 0
 
     # Validate selected_indices is a list
     if not isinstance(selected_indices, list):
-        app.logger.error("Invalid selected_question_indices type")
+        logger.error("Invalid selected_question_indices type")
         selected_indices = []
 
     # Calculate total, ensuring it's at least 1 to avoid division by zero
@@ -389,7 +396,7 @@ def review_wrong_answers() -> Any:
 
     # BACKEND VALIDATION: Ensure wrong_answers is a list
     if not isinstance(wrong_answers, list):
-        app.logger.error("Invalid wrong_answers data type in session")
+        logger.error("Invalid wrong_answers data type in session")
         return redirect(url_for("show_score"))
 
     if not wrong_answers:
@@ -431,7 +438,7 @@ def internal_server_error(_error: Any) -> Tuple[str, int]:
 def handle_exception(e: Exception) -> Tuple[str, int]:
     """Handle all other exceptions."""
     # Log the error for debugging
-    app.logger.error("Unhandled exception: %s", e, exc_info=True)
+    logger.error("Unhandled exception: %s", e, exc_info=True)
 
     # Return a generic error page
     return (
@@ -441,4 +448,4 @@ def handle_exception(e: Exception) -> Tuple[str, int]:
 
 
 if __name__ == "__main__":
-    app.run(debug=os.environ.get("FLASK_DEBUG", "False").lower() == "true")
+    app.run(debug=config.DEBUG)
