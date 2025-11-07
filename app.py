@@ -3,6 +3,7 @@ import os
 import random
 import secrets
 import time
+from datetime import timedelta
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_wtf.csrf import CSRFProtect
 
@@ -24,6 +25,15 @@ if not secret_key:
     print("=" * 80)
 
 app.secret_key = secret_key
+
+# Production-ready session security settings
+app.config.update(
+    SESSION_COOKIE_SECURE=os.environ.get("SESSION_COOKIE_SECURE", "False").lower() == "true",
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    PERMANENT_SESSION_LIFETIME=timedelta(hours=2)
+)
+
 csrf = CSRFProtect(app)
 
 # Time limit settings
@@ -94,6 +104,61 @@ def validate_time_remaining():
     return True, remaining_time
 
 
+def apply_shuffle_mapping(question, question_index, shuffle_mappings):
+    """
+    Apply shuffle mapping to a question's options if shuffling is enabled.
+    
+    Args:
+        question: Dictionary containing question data (will be modified in place)
+        question_index: Index of the question in the original questions list
+        shuffle_mappings: Dictionary mapping question indices to shuffle data
+    
+    Returns:
+        The modified question dictionary
+    """
+    if shuffle_mappings and question_index in shuffle_mappings:
+        mapping = shuffle_mappings[question_index]
+        shuffled_order = mapping["order"]
+        original_options = question["options"]
+        question["options"] = [original_options[i] for i in shuffled_order]
+        question["correct_answer_index"] = mapping["correct_index"]
+    return question
+
+
+def validate_test_configuration(selected_categories, num_questions, time_limit, filtered_questions):
+    """
+    Validate user test configuration inputs.
+    
+    Args:
+        selected_categories: List of selected category names
+        num_questions: Number of questions requested
+        time_limit: Time limit in minutes
+        filtered_questions: List of questions matching selected categories
+    
+    Returns:
+        Tuple of (is_valid: bool, error_message: str or None)
+    """
+    # Validate categories
+    if not selected_categories or len(selected_categories) == 0:
+        return False, "Please select at least one category"
+    
+    # Validate number of questions
+    if num_questions is None or num_questions < 1:
+        return False, "Number of questions must be at least 1"
+    
+    if num_questions > len(filtered_questions):
+        return False, f"Only {len(filtered_questions)} questions available for selected categories"
+    
+    # Validate time limit
+    if time_limit is None or time_limit < MIN_TIME_LIMIT_MINUTES:
+        return False, f"Time limit must be at least {MIN_TIME_LIMIT_MINUTES} minute(s)"
+    
+    if time_limit > MAX_TIME_LIMIT_MINUTES:
+        return False, f"Time limit cannot exceed {MAX_TIME_LIMIT_MINUTES} minutes"
+    
+    return True, None
+
+
 questions = load_questions()
 
 
@@ -121,11 +186,6 @@ def start_test():
     # Get the selected categories
     selected_categories = request.form.getlist("categories")
 
-    # Validate that at least one category is selected
-    if not selected_categories:
-        # Redirect back to start if no categories selected
-        return redirect(url_for("start"))
-
     # Filter questions by selected categories
     filtered_questions = [
         q for q in questions if q.get("category") in selected_categories
@@ -138,18 +198,32 @@ def start_test():
     # Get the number of questions requested (default to all filtered questions)
     num_questions = request.form.get("num_questions", type=int)
 
-    # Validate the input
+    # Validate the input - use filtered questions length as default
     if num_questions is None or num_questions < 1:
         num_questions = len(filtered_questions)
-    elif num_questions > len(filtered_questions):
-        num_questions = len(filtered_questions)
-
-    # Get the time limit in minutes (default to 10, min 1, max 120)
+    
+    # Get the time limit in minutes (default to 10)
     time_limit = request.form.get("time_limit", type=int)
-    if time_limit is None or time_limit < 1:
+    if time_limit is None:
         time_limit = DEFAULT_TIME_LIMIT_MINUTES
-    elif time_limit > MAX_TIME_LIMIT_MINUTES:
-        time_limit = MAX_TIME_LIMIT_MINUTES
+    
+    # Validate test configuration
+    is_valid, error_message = validate_test_configuration(
+        selected_categories, num_questions, time_limit, filtered_questions
+    )
+    
+    if not is_valid:
+        # In a production app, you'd flash this message and redirect back
+        # For now, we'll log it and use safe defaults
+        app.logger.warning("Invalid test configuration: %s", error_message)
+        # Redirect back to start if validation fails
+        return redirect(url_for("start"))
+
+    # Ensure num_questions doesn't exceed available questions
+    num_questions = min(num_questions, len(filtered_questions))
+    
+    # Ensure time_limit is within bounds
+    time_limit = max(MIN_TIME_LIMIT_MINUTES, min(time_limit, MAX_TIME_LIMIT_MINUTES))
 
     # Get the shuffle answers option
     shuffle_answers = request.form.get("shuffle_answers") == "true"
@@ -178,7 +252,7 @@ def start_test():
             }
         session["shuffle_mappings"] = shuffle_mappings
     else:
-        session["shuffle_mappings"] = None
+        session["shuffle_mappings"] = {}
 
     # Store the selected question indices and test state in the session
     session["selected_question_indices"] = selected_indices
@@ -218,15 +292,10 @@ def show_question():
     current_question_index = selected_indices[q_index]
     current_question = questions[current_question_index].copy()
 
-    # Apply shuffling if enabled
-    if shuffle_mappings and current_question_index in shuffle_mappings:
-        mapping = shuffle_mappings[current_question_index]
-        shuffled_order = mapping["order"]
-        # Reorder options according to the shuffle mapping
-        original_options = current_question["options"]
-        current_question["options"] = [original_options[i] for i in shuffled_order]
-        # Use the new correct answer index for display
-        current_question["correct_answer_index"] = mapping["correct_index"]
+    # Apply shuffling if enabled using helper function
+    current_question = apply_shuffle_mapping(
+        current_question, current_question_index, shuffle_mappings
+    )
 
     if request.method == "POST":
         # Re-validate time on POST to prevent manipulation
@@ -336,15 +405,9 @@ def review_wrong_answers():
         question_index = wrong["question_index"]
         question = questions[question_index].copy()
 
-        # Apply shuffling if it was enabled
-        if shuffle_mappings and question_index in shuffle_mappings:
-            mapping = shuffle_mappings[question_index]
-            shuffled_order = mapping["order"]
-            original_options = question["options"]
-            question["options"] = [original_options[i] for i in shuffled_order]
-            correct_answer_index = mapping["correct_index"]
-        else:
-            correct_answer_index = question["correct_answer_index"]
+        # Apply shuffling if it was enabled using helper function
+        question = apply_shuffle_mapping(question, question_index, shuffle_mappings)
+        correct_answer_index = question["correct_answer_index"]
 
         review_data.append(
             {
