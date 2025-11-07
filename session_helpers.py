@@ -9,6 +9,8 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from flask import session
 
+from constants import CLOCK_SKEW_TOLERANCE_SECONDS, DEFAULT_TIME_LIMIT_SECONDS, SECONDS_PER_MINUTE
+
 
 def validate_time_remaining() -> Tuple[bool, int]:
     """
@@ -18,7 +20,7 @@ def validate_time_remaining() -> Tuple[bool, int]:
         Tuple of (is_valid, remaining_time)
     """
     start_time: Optional[float] = session.get("start_time")
-    time_limit: int = session.get("time_limit", 600)
+    time_limit: int = session.get("time_limit", DEFAULT_TIME_LIMIT_SECONDS)
 
     if start_time is None:
         return False, 0
@@ -44,14 +46,15 @@ def get_server_timestamp() -> float:
 
 
 def validate_client_timestamp(
-    client_timestamp: Optional[float], tolerance_seconds: int = 5
+    client_timestamp: Optional[float],
+    tolerance_seconds: int = CLOCK_SKEW_TOLERANCE_SECONDS,
 ) -> bool:
     """
     Validate client timestamp to detect significant clock skew.
 
     Args:
         client_timestamp: Timestamp from client (Unix timestamp in seconds)
-        tolerance_seconds: Maximum acceptable time difference in seconds (default: 5)
+        tolerance_seconds: Maximum acceptable time difference in seconds
 
     Returns:
         True if client timestamp is within tolerance, False otherwise
@@ -85,7 +88,7 @@ def initialize_test_session(
     session["current_question_index"] = 0
     session["score"] = 0
     session["wrong_answers"] = []
-    session["time_limit"] = time_limit_minutes * 60  # Convert to seconds
+    session["time_limit"] = time_limit_minutes * SECONDS_PER_MINUTE  # Convert to seconds
     session["start_time"] = time.time()
     session["shuffle_mappings"] = shuffle_mappings
     session["shuffle_answers"] = shuffle_answers

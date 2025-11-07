@@ -17,6 +17,11 @@ from typing import Optional
 
 from dotenv import load_dotenv
 
+from constants import SEPARATOR_WIDTH
+
+# Get module logger
+logger = logging.getLogger(__name__)
+
 
 class Config:
     """
@@ -44,7 +49,7 @@ class Config:
 
             if env_file.exists():
                 load_dotenv(env_file)
-                print(f"✓ Loaded environment variables from {env_file}")
+                logger.info("✓ Loaded environment variables from %s", env_file)
             else:
                 # Try loading from current directory as fallback
                 load_dotenv()
@@ -104,26 +109,27 @@ class Config:
         # Provide helpful guidance
         env_file = Path(__file__).parent / ".env"
 
-        print("=" * 80)
-        print("⚠️  WARNING: No SECRET_KEY found in environment!")
-        print("=" * 80)
-        print("A temporary secret key has been generated, but sessions will be")
-        print("invalidated when the server restarts.")
-        print()
-        print("To fix this, add the following line to your .env file:")
-        print()
-        print(f"SECRET_KEY={new_secret_key}")
-        print()
+        separator = "=" * SEPARATOR_WIDTH
+        logger.warning(separator)
+        logger.warning("⚠️  WARNING: No SECRET_KEY found in environment!")
+        logger.warning(separator)
+        logger.warning("A temporary secret key has been generated, but sessions will be")
+        logger.warning("invalidated when the server restarts.")
+        logger.warning("")
+        logger.warning("To fix this, add the following line to your .env file:")
+        logger.warning("")
+        logger.warning("SECRET_KEY=%s", new_secret_key)
+        logger.warning("")
 
         if not env_file.exists():
-            print(f"Create the file at: {env_file}")
-            print()
-            print("You can also copy .env.example to .env and update it:")
-            print("  cp .env.example .env")
+            logger.warning("Create the file at: %s", env_file)
+            logger.warning("")
+            logger.warning("You can also copy .env.example to .env and update it:")
+            logger.warning("  cp .env.example .env")
         else:
-            print(f"Add it to: {env_file}")
+            logger.warning("Add it to: %s", env_file)
 
-        print("=" * 80)
+        logger.warning(separator)
 
         return new_secret_key
 
@@ -168,12 +174,12 @@ class Config:
             file_handler.setFormatter(formatter)
             root_logger.addHandler(file_handler)
 
-            print(f"✓ Logging to file: {log_file}")
+            logger.info("✓ Logging to file: %s", log_file)
 
         # Set Flask's logger to use the same configuration
         logging.getLogger("werkzeug").setLevel(logging.WARNING)
 
-        print(f"✓ Logging configured (level: {self.LOG_LEVEL})")
+        logger.info("✓ Logging configured (level: %s)", self.LOG_LEVEL)
 
     def apply_to_flask_app(self, app) -> None:
         """

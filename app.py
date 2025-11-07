@@ -100,17 +100,17 @@ def load_questions() -> List[Dict[str, Any]]:
         if not isinstance(validated_questions, list) or len(validated_questions) == 0:
             raise ValueError("Questions file must contain a non-empty JSON array")
 
-        print(f"✓ Successfully loaded and validated {len(validated_questions)} questions")
         logger.info("Successfully loaded and validated %d questions", len(validated_questions))
         return validated_questions
 
     except QuestionValidationError as e:
         logger.error("Questions data validation failed: %s", str(e))
-        print("=" * 80)
-        print("ERROR: Questions data validation failed!")
-        print("=" * 80)
-        print(str(e))
-        print("=" * 80)
+        separator = "=" * 80
+        logger.error(separator)
+        logger.error("ERROR: Questions data validation failed!")
+        logger.error(separator)
+        logger.error("%s", str(e))
+        logger.error(separator)
         raise
 
 
