@@ -51,10 +51,6 @@
                 "minLength": 10,
                 "maxLength": 2000,
                 "description": "Explanation of the correct answer"
-            },
-            "new": {
-                "type": "boolean",
-                "description": "Optional flag to mark new questions"
             }
         },
         "additionalProperties": false
